@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Outta What School?</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@400;600;700;800&display=swap');
 :root{--bg:#08111f;--panel:#111d31;--panel2:#17243b;--text:#f7f9fc;--muted:#9fb0c7;--accent:#58d68d;--warn:#ffd166;--bad:#ff6b6b;--line:#263a5a}
 *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#142640 0,#08111f 48%);color:var(--text);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
 .app{max-width:720px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 30px)}
@@ -15,6 +16,18 @@
 input,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#0a1527;color:var(--text);padding:14px 13px;font-size:16px;outline:none}input:focus,select:focus{border-color:#4f7fb6}.btn{appearance:none;width:100%;border:0;border-radius:15px;padding:14px 15px;font-size:16px;font-weight:900;cursor:pointer}.primary{background:var(--accent);color:#062112}.secondary{background:#213654;color:var(--text)}.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}.danger{background:#422130;color:#ffd8df}.btn:disabled{opacity:.45;cursor:default}
 .autocomplete{position:relative}.suggestions{position:absolute;z-index:20;left:0;right:0;top:100%;margin-top:6px;background:#0a1527;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35);max-height:240px;overflow-y:auto}.suggestion{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}.suggestion:last-child{border-bottom:0}.suggestion b{display:block}.suggestion span{font-size:11px;color:var(--muted)}.suggestion:hover,.suggestion.active{background:#152743}.selected-school{font-size:12px;color:var(--accent);margin-top:7px}.clue{padding:13px 14px;background:#0a1527;border-left:4px solid var(--warn);border-radius:12px;margin:10px 0}.clue b{display:block;font-size:11px;text-transform:uppercase;color:var(--warn);letter-spacing:.08em;margin-bottom:4px}.center{text-align:center}.hidden{display:none!important}.spacer{height:6px}.tiny{font-size:12px;color:var(--muted)}.turn{font-size:13px;color:var(--accent);font-weight:900}.divider{height:1px;background:var(--line);margin:14px 0}.answer{font-size:24px;font-weight:950}.good{color:var(--accent)}.bad{color:var(--bad)}.footer{margin-top:18px;color:#71849f;font-size:11px;line-height:1.5}.tag{display:inline-block;margin:3px 5px 0 0;padding:5px 8px;border-radius:999px;background:#0a1527;border:1px solid var(--line);font-size:11px;color:#b8c7d9}.prompt{font-size:24px;font-weight:950;letter-spacing:.04em;text-align:center;margin:18px 0 14px;color:var(--warn)}.timer{font-variant-numeric:tabular-nums;font-size:28px;font-weight:950}.leaderboard{width:100%;border-collapse:collapse;margin-top:12px}.leaderboard th,.leaderboard td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}.leaderboard th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.leaderboard td:last-child,.leaderboard th:last-child{text-align:right}.leaderboard tr.current{background:#142640}
 @media(max-width:520px){.title{font-size:32px}.big{font-size:30px}.row{flex-direction:column}.scoreline{gap:6px}}
+
+/* Black / graffiti green / white / blue theme */
+html,body{background:#000!important;color:#fff!important;font-family:'Inter',system-ui,-apple-system,sans-serif!important}
+h1{font-family:'Permanent Marker',cursive!important;color:#31ff1a!important;text-transform:uppercase!important;letter-spacing:.02em!important;text-shadow:0 0 10px rgba(49,255,26,.16)!important}
+.card{background:linear-gradient(180deg,#0d0d0d,#090909)!important;border-color:#2a2e35!important}
+input{background:#fff!important;color:#111!important;border:2px solid #0a74ff!important}
+input::placeholder{color:#68707c!important}
+button.primary{background:linear-gradient(180deg,#0a74ff,#005be8)!important;color:#fff!important;border-color:#29a3ff!important}
+button.secondary{background:#111!important;color:#fff!important;border-color:#34383f!important}
+#suggestions{background:#fff!important;color:#111!important;border-color:#0a74ff!important}
+.sug{color:#111!important;background:#fff!important}
+.sug:hover{background:#eaf3ff!important}
 </style>
 </head>
 <body>
@@ -52,7 +65,7 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
       <div id="position" class="tag">QB</div>
       <div class="divider"></div>
       <div id="clues"></div>
-      <div class="prompt">OUT OF WHAT SCHOOL?!</div>
+      <div class="prompt">OUTTA WHAT SCHOOL?!</div>
       <div class="label">Your guess</div>
       <div class="autocomplete">
         <input id="guess" placeholder="Start typing a school (e.g. Bama, PSU, Cincy)" autocomplete="off" oninput="showSuggestions()" />
