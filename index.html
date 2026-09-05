@@ -19,7 +19,7 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
 </head>
 <body>
 <div class="app">
-  <div class="brand">Local H2H Prototype</div>
+  <div class="brand">Expanded Beta · Local Play</div>
   <div class="title">OUTTA WHAT SCHOOL?</div>
   <p class="subtitle">Guess the final college an NFL player played for. Fewer clues = more points.</p>
 
@@ -35,8 +35,8 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
     <div class="spacer"></div>
     <div><div class="label">Difficulty</div><select id="mode"><option selected>Football Fan</option><option>Casual</option><option>Sicko</option></select></div>
     <div class="spacer"></div>
-    <button class="btn primary" onclick="startGame()">START GAME</button>
-    <div class="footer">Prototype dataset: 25 recognizable NFL players. Answer matching accepts common school aliases.</div>
+    <button class="btn primary" id="startBtn" onclick="startGame()" disabled>START GAME</button>
+    <div class="footer" id="poolStatus">Loading expanded 500-player pool…</div>
   </section>
 
   <section id="game" class="hidden">
@@ -89,51 +89,141 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
 </div>
 <script>
 const SCORE=[10,8,6,4,2,1];
-const Q=[
-{p:'Patrick Mahomes',pos:'QB',school:'Texas Tech',aliases:['texas tech university','ttu','red raiders'],clues:[['Alumni','Another Pro Bowl NFL quarterback from this school: Baker Mayfield began his college career here.'],['Conference','The school currently competes in the Big 12.'],['Colors','Official athletics colors include Raider Red and black.'],['Rivalry','Its in-state rivalry with TCU is played for the Saddle Trophy.'],['Team name','Red Raiders']]},
-{p:'Josh Allen',pos:'QB',school:'Wyoming',aliases:['university of wyoming','wyoming cowboys','uw'],clues:[['Conference','The school competes in the Mountain West.'],['Colors','Its best-known colors are brown and gold.'],['Rivalry','It plays Colorado State for the Bronze Boot.'],['Alumni','Pro Bowl defensive back Tashaun Gipson also played here.'],['Team name','Cowboys']]},
-{p:'Joe Burrow',pos:'QB',school:'LSU',aliases:['louisiana state','louisiana state university','tigers'],clues:[['Teammate','Justin Jefferson was a college teammate.'],['Conference','The school competes in the SEC.'],['Colors','Its official colors are purple and gold.'],['Rivalry','It plays Arkansas for the Golden Boot.'],['Team name','Tigers']]},
-{p:'Jalen Hurts',pos:'QB',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','CeeDee Lamb was a college teammate.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Texas in the Red River Rivalry.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
-{p:'Baker Mayfield',pos:'QB',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','Mark Andrews was a college teammate.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Oklahoma State for the Bedlam Bell.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
-{p:'Lamar Jackson',pos:'QB',school:'Louisville',aliases:['university of louisville','louisville cardinals','uofl'],clues:[['Conference','The school competes in the ACC.'],['Colors','Its athletics identity prominently uses red, black and white.'],['Rivalry','Its annual rivalry with Kentucky is played for the Governor’s Cup.'],['Alumni','Pro Bowl cornerback Jaire Alexander also played here.'],['Team name','Cardinals']]},
-{p:'Justin Herbert',pos:'QB',school:'Oregon',aliases:['university of oregon','oregon ducks','uo'],clues:[['Conference','The school currently competes in the Big Ten.'],['Colors','Its traditional athletics colors are green and yellow.'],['Rivalry','Its rivalry with Oregon State is commonly known as the Civil War.'],['Alumni','Pro Bowl defensive lineman Haloti Ngata also played here.'],['Team name','Ducks']]},
-{p:'Dak Prescott',pos:'QB',school:'Mississippi State',aliases:['mississippi state university','msu','bulldogs'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its primary colors are maroon and white.'],['Rivalry','It plays Ole Miss in the Egg Bowl.'],['Alumni','Pro Bowl defensive lineman Chris Jones also played here.'],['Team name','Bulldogs']]},
-{p:'Christian McCaffrey',pos:'RB',school:'Stanford',aliases:['stanford university','stanford cardinal','cardinal'],clues:[['Conference','The school currently competes in the ACC.'],['Colors','Its official school colors are cardinal and white.'],['Rivalry','Its rivalry with California is The Big Game, played for the Stanford Axe.'],['Alumni','Andrew Luck also played here.'],['Team name','Cardinal — singular.']]},
-{p:'Saquon Barkley',pos:'RB',school:'Penn State',aliases:['pennsylvania state university','the pennsylvania state university','psu','nittany lions'],clues:[['Teammate','Micah Parsons later starred for the same program.'],['Conference','The school competes in the Big Ten.'],['Colors','Its colors are blue and white.'],['Rivalry','It competes with Michigan State for the Land Grant Trophy.'],['Team name','Nittany Lions']]},
-{p:'Derrick Henry',pos:'RB',school:'Alabama',aliases:['university of alabama','bama','crimson tide'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its best-known colors are crimson and white.'],['Rivalry','It plays Auburn in the Iron Bowl.'],['Alumni','Julio Jones also played here.'],['Team name','Crimson Tide']]},
-{p:'Josh Jacobs',pos:'RB',school:'Alabama',aliases:['university of alabama','bama','crimson tide'],clues:[['Teammate','He shared a college backfield room with Derrick Henry early in his career.'],['Conference','The school competes in the SEC.'],['Colors','Its best-known colors are crimson and white.'],['Rivalry','It plays Tennessee on the Third Saturday in October.'],['Team name','Crimson Tide']]},
-{p:'Justin Jefferson',pos:'WR',school:'LSU',aliases:['louisiana state','louisiana state university','tigers'],clues:[['Teammate','Joe Burrow was his college quarterback.'],['Conference','The school competes in the SEC.'],['Colors','Its official colors are purple and gold.'],['Rivalry','It plays Arkansas for the Golden Boot.'],['Team name','Tigers']]},
-{p:"Ja'Marr Chase",pos:'WR',school:'LSU',aliases:['louisiana state','louisiana state university','tigers'],clues:[['Teammate','Justin Jefferson was a college teammate.'],['Conference','The school competes in the SEC.'],['Colors','Its official colors are purple and gold.'],['Rivalry','It plays Arkansas for the Golden Boot.'],['Team name','Tigers']]},
-{p:'CeeDee Lamb',pos:'WR',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','Jalen Hurts was his college quarterback for one season.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Texas in the Red River Rivalry.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
-{p:'A.J. Brown',pos:'WR',school:'Ole Miss',aliases:['university of mississippi','mississippi','ole miss rebels','rebels'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its athletics palette prominently features red and navy.'],['Rivalry','It plays Mississippi State in the Egg Bowl.'],['Alumni','Pro Bowl receiver DK Metcalf also played here.'],['Team name','Rebels']]},
-{p:'Travis Kelce',pos:'TE',school:'Cincinnati',aliases:['university of cincinnati','cincinnati bearcats','uc','bearcats'],clues:[['Conference','The school currently competes in the Big 12.'],['Colors','Its primary colors are red and black.'],['Rivalry','It plays Miami (Ohio) for the Victory Bell.'],['Alumni','Pro Bowl cornerback Sauce Gardner also played here.'],['Team name','Bearcats']]},
-{p:'George Kittle',pos:'TE',school:'Iowa',aliases:['university of iowa','iowa hawkeyes','hawkeyes'],clues:[['Conference','The school competes in the Big Ten.'],['Colors','Its colors are black and gold.'],['Rivalry','It plays Iowa State for the Cy-Hawk Trophy.'],['Alumni','Pro Bowl tight end T.J. Hockenson also played here.'],['Team name','Hawkeyes']]},
-{p:'Mark Andrews',pos:'TE',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','Baker Mayfield was his college quarterback.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Texas in the Red River Rivalry.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
-{p:'T.J. Watt',pos:'DEF',school:'Wisconsin',aliases:['university of wisconsin','wisconsin madison','wisconsin badgers','uw madison','badgers'],clues:[['Conference','The school competes in the Big Ten.'],['Colors','Its primary colors are cardinal and white.'],['Rivalry','It plays Minnesota for Paul Bunyan’s Axe.'],['Alumni','J.J. Watt also played here.'],['Team name','Badgers']]},
-{p:'Myles Garrett',pos:'DEF',school:'Texas A&M',aliases:['texas a&m university','tamu','aggies','texas am'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its primary school colors are maroon and white.'],['Rivalry','Its historic rivalry with Texas is known as the Lone Star Showdown.'],['Alumni','Pro Bowl receiver Mike Evans also played here.'],['Team name','Aggies']]},
-{p:'Micah Parsons',pos:'DEF',school:'Penn State',aliases:['pennsylvania state university','the pennsylvania state university','psu','nittany lions'],clues:[['Teammate','Saquon Barkley starred at the same program immediately before him.'],['Conference','The school competes in the Big Ten.'],['Colors','Its colors are blue and white.'],['Rivalry','It competes with Michigan State for the Land Grant Trophy.'],['Team name','Nittany Lions']]},
-{p:'Jalen Ramsey',pos:'DEF',school:'Florida State',aliases:['florida state university','fsu','seminoles'],clues:[['Conference','The school competes in the ACC.'],['Colors','Its core athletics colors are garnet and gold.'],['Rivalry','It plays Florida for the Makala Trophy.'],['Alumni','Pro Bowl running back Dalvin Cook also played here.'],['Team name','Seminoles']]},
-{p:'Sauce Gardner',pos:'DEF',school:'Cincinnati',aliases:['university of cincinnati','cincinnati bearcats','uc','bearcats'],clues:[['Conference','The school currently competes in the Big 12.'],['Colors','Its primary colors are red and black.'],['Rivalry','It plays Miami (Ohio) for the Victory Bell.'],['Alumni','Travis Kelce also played here.'],['Team name','Bearcats']]},
-{p:'Nick Bosa',pos:'DEF',school:'Ohio State',aliases:['the ohio state university','ohio state university','osu','buckeyes'],clues:[['Conference','The school competes in the Big Ten.'],['Colors','Its official colors are scarlet and gray.'],['Rivalry','Its annual game against Michigan is simply known as The Game.'],['Alumni','Joey Bosa also played here.'],['Team name','Buckeyes']]}
-];
+const TARGET_POOL=500;
+const DATA_URL='https://raw.githubusercontent.com/phcs971/nfl-draft-dataset/main/nfl_data.csv';
+
+// School metadata drives clue generation. Mascot/team name is intentionally last.
+const SCHOOL_META={
+'Alabama':{data:['Alabama'],aliases:['bama','university of alabama','ua','crimson tide'],conf:'SEC',colors:'crimson and white',rivalry:'Auburn in the Iron Bowl',team:'Crimson Tide'},
+'LSU':{data:['Louisiana State','LSU'],aliases:['louisiana state','louisiana state university','tigers'],conf:'SEC',colors:'purple and gold',rivalry:'Arkansas for the Golden Boot',team:'Tigers'},
+'Ohio State':{data:['Ohio State'],aliases:['osu','the ohio state','the ohio state university','buckeyes'],conf:'Big Ten',colors:'scarlet and gray',rivalry:'Michigan in The Game',team:'Buckeyes'},
+'Georgia':{data:['Georgia'],aliases:['uga','university of georgia','georgia bulldogs'],conf:'SEC',colors:'red and black',rivalry:'Florida in the rivalry commonly called the World’s Largest Outdoor Cocktail Party',team:'Bulldogs'},
+'Michigan':{data:['Michigan'],aliases:['um','u of m','university of michigan','wolverines'],conf:'Big Ten',colors:'maize and blue',rivalry:'Ohio State in The Game',team:'Wolverines'},
+'Clemson':{data:['Clemson'],aliases:['clemson university','clemson tigers'],conf:'ACC',colors:'orange and regalia',rivalry:'South Carolina for the Palmetto Bowl',team:'Tigers'},
+'Oklahoma':{data:['Oklahoma'],aliases:['ou','university of oklahoma','sooners'],conf:'SEC',colors:'crimson and cream',rivalry:'Texas in the Red River Rivalry',team:'Sooners'},
+'Texas':{data:['Texas'],aliases:['ut','university of texas','texas longhorns','longhorns'],conf:'SEC',colors:'burnt orange and white',rivalry:'Oklahoma in the Red River Rivalry',team:'Longhorns'},
+'Texas A&M':{data:['Texas A&M'],aliases:['tamu','texas am','a&m','aggies'],conf:'SEC',colors:'maroon and white',rivalry:'Texas in the Lone Star Showdown',team:'Aggies'},
+'Florida':{data:['Florida'],aliases:['uf','university of florida','gators','florida gators'],conf:'SEC',colors:'orange and blue',rivalry:'Georgia in a major neutral-site rivalry',team:'Gators'},
+'Florida State':{data:['Florida State'],aliases:['fsu','florida state university','seminoles'],conf:'ACC',colors:'garnet and gold',rivalry:'Miami in one of Florida’s major in-state rivalries',team:'Seminoles'},
+'Miami (FL)':{data:['Miami (FL)','Miami'],aliases:['miami','miami fl','the u','university of miami','hurricanes'],conf:'ACC',colors:'orange, green and white',rivalry:'Florida State in a major in-state rivalry',team:'Hurricanes'},
+'Penn State':{data:['Penn State'],aliases:['psu','pennsylvania state','pennsylvania state university','nittany lions'],conf:'Big Ten',colors:'blue and white',rivalry:'Michigan State for the Land Grant Trophy',team:'Nittany Lions'},
+'Wisconsin':{data:['Wisconsin'],aliases:['uw madison','university of wisconsin','badgers'],conf:'Big Ten',colors:'cardinal and white',rivalry:'Minnesota for Paul Bunyan’s Axe',team:'Badgers'},
+'Iowa':{data:['Iowa'],aliases:['university of iowa','hawkeyes'],conf:'Big Ten',colors:'black and gold',rivalry:'Iowa State for the Cy-Hawk Trophy',team:'Hawkeyes'},
+'Notre Dame':{data:['Notre Dame'],aliases:['nd','university of notre dame','fighting irish'],conf:'Independent in football',colors:'blue and gold',rivalry:'USC for the Jeweled Shillelagh',team:'Fighting Irish'},
+'Oregon':{data:['Oregon'],aliases:['uo','university of oregon','ducks'],conf:'Big Ten',colors:'green and yellow',rivalry:'Oregon State in their long-running in-state rivalry',team:'Ducks'},
+'USC':{data:['Southern California','USC'],aliases:['usc','southern cal','southern california','trojans'],conf:'Big Ten',colors:'cardinal and gold',rivalry:'Notre Dame for the Jeweled Shillelagh',team:'Trojans'},
+'UCLA':{data:['UCLA'],aliases:['ucla bruins','bruins'],conf:'Big Ten',colors:'blue and gold',rivalry:'USC for the Victory Bell',team:'Bruins'},
+'Washington':{data:['Washington'],aliases:['uw','university of washington','huskies'],conf:'Big Ten',colors:'purple and gold',rivalry:'Washington State in the Apple Cup',team:'Huskies'},
+'Stanford':{data:['Stanford'],aliases:['stanford university','cardinal'],conf:'ACC',colors:'cardinal and white',rivalry:'California in The Big Game for the Stanford Axe',team:'Cardinal'},
+'California':{data:['California','California-Berkeley'],aliases:['cal','berkeley','uc berkeley','golden bears'],conf:'ACC',colors:'Berkeley blue and California gold',rivalry:'Stanford in The Big Game for the Stanford Axe',team:'Golden Bears'},
+'Tennessee':{data:['Tennessee'],aliases:['utk','university of tennessee','vols','volunteers'],conf:'SEC',colors:'orange and white',rivalry:'Alabama on the Third Saturday in October',team:'Volunteers'},
+'Auburn':{data:['Auburn'],aliases:['auburn university','tigers'],conf:'SEC',colors:'burnt orange and navy blue',rivalry:'Alabama in the Iron Bowl',team:'Tigers'},
+'Ole Miss':{data:['Mississippi','Mississippi (MS)'],aliases:['ole miss','university of mississippi','rebels'],conf:'SEC',colors:'red and navy blue',rivalry:'Mississippi State in the Egg Bowl',team:'Rebels'},
+'Mississippi State':{data:['Mississippi State'],aliases:['msu','mississippi state university','bulldogs'],conf:'SEC',colors:'maroon and white',rivalry:'Ole Miss in the Egg Bowl',team:'Bulldogs'},
+'Arkansas':{data:['Arkansas'],aliases:['university of arkansas','razorbacks','hogs'],conf:'SEC',colors:'cardinal and white',rivalry:'LSU for the Golden Boot',team:'Razorbacks'},
+'South Carolina':{data:['South Carolina'],aliases:['usc south carolina','university of south carolina','gamecocks'],conf:'SEC',colors:'garnet and black',rivalry:'Clemson in the Palmetto Bowl',team:'Gamecocks'},
+'Kentucky':{data:['Kentucky'],aliases:['uk','university of kentucky','wildcats'],conf:'SEC',colors:'blue and white',rivalry:'Louisville for the Governor’s Cup',team:'Wildcats'},
+'Missouri':{data:['Missouri'],aliases:['mizzou','university of missouri','tigers'],conf:'SEC',colors:'black and gold',rivalry:'Kansas in the Border War',team:'Tigers'},
+'Louisville':{data:['Louisville'],aliases:['uofl','university of louisville','cardinals'],conf:'ACC',colors:'red and black',rivalry:'Kentucky for the Governor’s Cup',team:'Cardinals'},
+'Cincinnati':{data:['Cincinnati'],aliases:['cincy','uc','university of cincinnati','bearcats'],conf:'Big 12',colors:'red and black',rivalry:'Miami (Ohio) for the Victory Bell',team:'Bearcats'},
+'UCF':{data:['Central Florida','UCF'],aliases:['ucf','central florida','knights'],conf:'Big 12',colors:'black and gold',rivalry:'South Florida in the War on I-4',team:'Knights'},
+'TCU':{data:['Texas Christian','TCU'],aliases:['tcu','texas christian university','horned frogs'],conf:'Big 12',colors:'purple and white',rivalry:'Baylor in the Revivalry',team:'Horned Frogs'},
+'Baylor':{data:['Baylor'],aliases:['baylor university','bears'],conf:'Big 12',colors:'green and gold',rivalry:'TCU in the Revivalry',team:'Bears'},
+'Texas Tech':{data:['Texas Tech'],aliases:['ttu','texas tech university','red raiders'],conf:'Big 12',colors:'scarlet and black',rivalry:'TCU for the Saddle Trophy',team:'Red Raiders'},
+'Oklahoma State':{data:['Oklahoma State'],aliases:['osu cowboys','ok state','oklahoma state university','cowboys'],conf:'Big 12',colors:'orange and black',rivalry:'Oklahoma in Bedlam',team:'Cowboys'},
+'Kansas State':{data:['Kansas State'],aliases:['k state','ksu','kansas state university','wildcats'],conf:'Big 12',colors:'purple and white',rivalry:'Kansas in the Sunflower Showdown',team:'Wildcats'},
+'West Virginia':{data:['West Virginia'],aliases:['wvu','west virginia university','mountaineers'],conf:'Big 12',colors:'old gold and blue',rivalry:'Pittsburgh in the Backyard Brawl',team:'Mountaineers'},
+'North Carolina':{data:['North Carolina'],aliases:['unc','university of north carolina','tar heels'],conf:'ACC',colors:'Carolina blue and white',rivalry:'Duke for the Victory Bell',team:'Tar Heels'},
+'NC State':{data:['North Carolina State','North Carolina St.','NC State'],aliases:['nc state','ncsu','north carolina state','wolfpack'],conf:'ACC',colors:'red and white',rivalry:'North Carolina in an in-state rivalry',team:'Wolfpack'},
+'Virginia Tech':{data:['Virginia Tech'],aliases:['vt','vtech','hokies'],conf:'ACC',colors:'Chicago maroon and burnt orange',rivalry:'Virginia for the Commonwealth Cup',team:'Hokies'},
+'Pittsburgh':{data:['Pittsburgh','Pitt'],aliases:['pitt','university of pittsburgh','panthers'],conf:'ACC',colors:'royal blue and gold',rivalry:'West Virginia in the Backyard Brawl',team:'Panthers'},
+'Boston College':{data:['Boston College'],aliases:['bc','eagles'],conf:'ACC',colors:'maroon and gold',rivalry:'Syracuse in a long-running Northeast rivalry',team:'Eagles'},
+'Maryland':{data:['Maryland'],aliases:['umd','university of maryland','terrapins','terps'],conf:'Big Ten',colors:'red, white, black and gold',rivalry:'Virginia in a regional rivalry',team:'Terrapins'},
+'Michigan State':{data:['Michigan State'],aliases:['msu spartans','michigan state university','spartans'],conf:'Big Ten',colors:'green and white',rivalry:'Michigan for the Paul Bunyan Trophy',team:'Spartans'},
+'Nebraska':{data:['Nebraska'],aliases:['university of nebraska','huskers','cornhuskers'],conf:'Big Ten',colors:'scarlet and cream',rivalry:'Iowa in the Heroes Game',team:'Cornhuskers'},
+'Minnesota':{data:['Minnesota'],aliases:['university of minnesota','gophers','golden gophers'],conf:'Big Ten',colors:'maroon and gold',rivalry:'Wisconsin for Paul Bunyan’s Axe',team:'Golden Gophers'},
+'Purdue':{data:['Purdue'],aliases:['purdue university','boilermakers'],conf:'Big Ten',colors:'old gold and black',rivalry:'Indiana for the Old Oaken Bucket',team:'Boilermakers'},
+'Indiana':{data:['Indiana'],aliases:['iu','indiana university','hoosiers'],conf:'Big Ten',colors:'cream and crimson',rivalry:'Purdue for the Old Oaken Bucket',team:'Hoosiers'},
+'Illinois':{data:['Illinois'],aliases:['uiuc','university of illinois','fighting illini','illini'],conf:'Big Ten',colors:'orange and blue',rivalry:'Northwestern for the Land of Lincoln Trophy',team:'Fighting Illini'},
+'Northwestern':{data:['Northwestern'],aliases:['northwestern university','wildcats'],conf:'Big Ten',colors:'purple and white',rivalry:'Illinois for the Land of Lincoln Trophy',team:'Wildcats'},
+'Arizona State':{data:['Arizona State'],aliases:['asu','sun devils'],conf:'Big 12',colors:'maroon and gold',rivalry:'Arizona for the Territorial Cup',team:'Sun Devils'},
+'Arizona':{data:['Arizona'],aliases:['university of arizona','zona','wildcats'],conf:'Big 12',colors:'cardinal and navy',rivalry:'Arizona State for the Territorial Cup',team:'Wildcats'},
+'Utah':{data:['Utah'],aliases:['university of utah','utes'],conf:'Big 12',colors:'red and white',rivalry:'BYU in the Holy War',team:'Utes'},
+'BYU':{data:['Brigham Young','BYU'],aliases:['byu','brigham young university','cougars'],conf:'Big 12',colors:'royal blue and white',rivalry:'Utah in the Holy War',team:'Cougars'},
+'Colorado':{data:['Colorado'],aliases:['cu','university of colorado','buffs','buffaloes'],conf:'Big 12',colors:'black, gold and silver',rivalry:'Colorado State in the Rocky Mountain Showdown',team:'Buffaloes'},
+'Boise State':{data:['Boise State'],aliases:['bsu','boise state university','broncos'],conf:'Mountain West',colors:'blue and orange',rivalry:'Fresno State for the Milk Can',team:'Broncos'},
+'Fresno State':{data:['Fresno State','Fresno State (CA)','Frenso State (CA)'],aliases:['fresno','fresno state university','bulldogs'],conf:'Mountain West',colors:'red and blue',rivalry:'Boise State for the Milk Can',team:'Bulldogs'},
+'San Diego State':{data:['San Diego State'],aliases:['sdsu','aztecs'],conf:'Mountain West',colors:'scarlet and black',rivalry:'Fresno State for the Old Oil Can',team:'Aztecs'},
+'Wyoming':{data:['Wyoming'],aliases:['uwyo','university of wyoming','cowboys'],conf:'Mountain West',colors:'brown and gold',rivalry:'Colorado State for the Bronze Boot',team:'Cowboys'}
+};
+
+const CURATED=[
+{p:'Patrick Mahomes',pos:'QB',school:'Texas Tech'},{p:'Josh Allen',pos:'QB',school:'Wyoming'},{p:'Joe Burrow',pos:'QB',school:'LSU'},{p:'Jalen Hurts',pos:'QB',school:'Oklahoma'},{p:'Baker Mayfield',pos:'QB',school:'Oklahoma'},{p:'Lamar Jackson',pos:'QB',school:'Louisville'},{p:'Justin Herbert',pos:'QB',school:'Oregon'},{p:'Dak Prescott',pos:'QB',school:'Mississippi State'},{p:'Christian McCaffrey',pos:'RB',school:'Stanford'},{p:'Saquon Barkley',pos:'RB',school:'Penn State'},{p:'Derrick Henry',pos:'RB',school:'Alabama'},{p:'Josh Jacobs',pos:'RB',school:'Alabama'},{p:'Justin Jefferson',pos:'WR',school:'LSU'},{p:"Ja'Marr Chase",pos:'WR',school:'LSU'},{p:'CeeDee Lamb',pos:'WR',school:'Oklahoma'},{p:'A.J. Brown',pos:'WR',school:'Ole Miss'},{p:'Travis Kelce',pos:'TE',school:'Cincinnati'},{p:'George Kittle',pos:'TE',school:'Iowa'},{p:'Mark Andrews',pos:'TE',school:'Oklahoma'},{p:'T.J. Watt',pos:'DEF',school:'Wisconsin'},{p:'Myles Garrett',pos:'DEF',school:'Texas A&M'},{p:'Micah Parsons',pos:'DEF',school:'Penn State'},{p:'Jalen Ramsey',pos:'DEF',school:'Florida State'},{p:'Sauce Gardner',pos:'DEF',school:'Cincinnati'},{p:'Nick Bosa',pos:'DEF',school:'Ohio State'}];
+
+let Q=[];
 let s={players:['Player 1','Player 2'],scores:[0,0],turn:0,round:0,total:10,deck:[],clueCount:0,current:null,answered:false,single:false,selectedSchool:null};
 const $=id=>document.getElementById(id);
-function norm(x){return x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').replace(/^the/,'')}
+function norm(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').replace(/^the/,'')}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function canonicalSchool(raw){const n=norm(raw);for(const [school,m] of Object.entries(SCHOOL_META)){if(m.data.some(d=>norm(d)===n)||norm(school)===n)return school}return null}
+function buildAliases(school){const m=SCHOOL_META[school];return [school,...(m?.aliases||[])]}
+function makeClues(school,playerName,allPlayers){const m=SCHOOL_META[school];const alumni=allPlayers.filter(x=>x.school===school&&x.p!==playerName).sort((a,b)=>(b.rank||0)-(a.rank||0));const alumnus=alumni[0]?.p||'another notable NFL player';return [
+['NFL alumnus',`${alumnus} also played college football at this school.`],
+['Conference',`The school currently competes in the ${m.conf}.`],
+['Colors',`Its official/traditional athletics colors include ${m.colors}.`],
+['Rivalry',`It competes against ${m.rivalry}.`],
+['Team name',m.team]
+]}
+function finalizePlayers(players){players.forEach(q=>{q.aliases=buildAliases(q.school);q.clues=makeClues(q.school,q.p,players)});return players}
+
+function parseSemicolonCSV(text){const lines=text.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(';');const idx=Object.fromEntries(head.map((h,i)=>[h,i]));return lines.map(line=>{const c=line.split(';');return {year:+c[idx.year]||0,name:c[idx.name],college:c[idx.college],pos:c[idx.pos],simple:c[idx.simple_pos],drafted:c[idx.drafted],pro:+c[idx.pro_bowls]||0,allpro:+c[idx.all_pros_first_team]||0,starter:+c[idx.years_as_primary_starter]||0,av:+c[idx.career_av]||0,g:+c[idx.g]||0}})}
+async function loadExpandedPool(){
+  const status=$('poolStatus'); const btn=$('startBtn');
+  try{
+    const r=await fetch(DATA_URL,{cache:'no-store'}); if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const rows=parseSemicolonCSV(await r.text());
+    const seen=new Set();
+    let candidates=[];
+    for(const x of rows){
+      if(x.year<2009||x.year>2024||String(x.drafted).toLowerCase()!=='true')continue;
+      const school=canonicalSchool(x.college); if(!school||!x.name)continue;
+      const offense=['QB','RB','WR','TE'].includes(x.simple) && (x.g>=16 || x.pro>0 || x.starter>=1 || x.av>=8);
+      const defense=['DB','DL','LB'].includes(x.simple) && x.pro>=1;
+      if(!offense&&!defense)continue;
+      const pos=defense?'DEF':x.simple; const key=norm(x.name);
+      if(seen.has(key))continue; seen.add(key);
+      const rank=x.pro*150+x.allpro*125+x.starter*14+x.av+x.g/8+(x.year-2009)*.2;
+      candidates.push({p:x.name,pos,school,rank,pro:x.pro,year:x.year});
+    }
+    // Guarantee curated stars/transfers are present and prefer their hand-checked school mapping.
+    const byName=new Map(candidates.map(x=>[norm(x.p),x]));
+    CURATED.forEach(c=>byName.set(norm(c.p),{...byName.get(norm(c.p)),...c,rank:(byName.get(norm(c.p))?.rank||999)+500}));
+    candidates=[...byName.values()].filter(x=>SCHOOL_META[x.school]).sort((a,b)=>(b.rank||0)-(a.rank||0)).slice(0,TARGET_POOL);
+    Q=finalizePlayers(candidates);
+    status.innerHTML=`Expanded pool loaded: <b>${Q.length}</b> eligible players · offense + defensive Pro Bowlers · 2009–2024 draft classes.`;
+    btn.disabled=Q.length<10;
+  }catch(e){
+    Q=finalizePlayers(CURATED.map(x=>({...x,rank:999})));
+    status.innerHTML=`Expanded data could not load; using the <b>${Q.length}-player offline fallback</b>. Check your connection and refresh to retry.`;
+    btn.disabled=false;
+  }
+}
+
 function toggleGameType(){const single=$('gameType').value==='single';$('p2wrap').classList.toggle('hidden',single)}
-function startGame(){s.single=$('gameType').value==='single';s.players=[$('p1name').value.trim()||'Player 1',s.single?'':($('p2name').value.trim()||'Player 2')];s.scores=[0,0];s.turn=0;s.round=0;s.total=+$('rounds').value;s.deck=shuffle(Q).slice(0,s.total);$('setup').classList.add('hidden');if(s.single){$('game').classList.remove('hidden');beginTurn()}else{$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[0]}updateScores()}
+function startGame(){if(Q.length<1)return;s.single=$('gameType').value==='single';s.players=[$('p1name').value.trim()||'Player 1',s.single?'':($('p2name').value.trim()||'Player 2')];s.scores=[0,0];s.turn=0;s.round=0;s.total=Math.min(+$('rounds').value,Q.length);s.deck=shuffle(Q).slice(0,s.total);$('setup').classList.add('hidden');if(s.single){$('game').classList.remove('hidden');beginTurn()}else{$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[0]}updateScores()}
 function beginTurn(){ $('handoff').classList.add('hidden');$('game').classList.remove('hidden');s.current=s.deck[s.round];s.clueCount=0;s.answered=false;s.selectedSchool=null;$('guess').value='';$('suggestions').classList.add('hidden');$('selectedSchool').textContent='Select a university from the list to submit.';$('clues').innerHTML='';$('feedback').textContent='';$('nflplayer').textContent=s.current.p;$('position').textContent=s.current.pos;$('roundpill').textContent=`Round ${s.round+1} / ${s.total}`;$('turnlabel').textContent=`${s.players[s.turn].toUpperCase()}'S TURN`;$('potential').textContent=SCORE[0];$('cluebtn').textContent='I NEED A CLUE — 8 PTS';$('guessbtn').disabled=false;$('cluebtn').disabled=false;updateScores();setTimeout(()=>$('guess').focus(),100)}
 function updateScores(){$('p1label').textContent=s.players[0];$('p1score').textContent=s.scores[0];$('p2label').textContent=s.single?'Solo High Score':s.players[1];$('p2score').textContent=s.single?'—':s.scores[1]}
 function revealClue(){if(s.clueCount>=5)return;const c=s.current.clues[s.clueCount];const div=document.createElement('div');div.className='clue';div.innerHTML=`<b>Clue ${s.clueCount+1} · ${c[0]}</b>${c[1]}`;$('clues').appendChild(div);s.clueCount++;$('potential').textContent=SCORE[s.clueCount];if(s.clueCount<5)$('cluebtn').textContent=`I NEED A CLUE — ${SCORE[s.clueCount+1]} PTS`;else{$('cluebtn').disabled=true;$('cluebtn').textContent='ALL CLUES REVEALED'}}
-const SCHOOLS=(()=>{const m=new Map();Q.forEach(q=>{if(!m.has(q.school))m.set(q.school,{name:q.school,aliases:new Set()});q.aliases.forEach(a=>m.get(q.school).aliases.add(a))});return [...m.values()].map(x=>({name:x.name,aliases:[...x.aliases]})).sort((a,b)=>a.name.localeCompare(b.name))})();
-function showSuggestions(){s.selectedSchool=null;$('selectedSchool').textContent='Select a university from the list to submit.';const raw=$('guess').value.trim(),n=norm(raw),box=$('suggestions');if(!raw){box.classList.add('hidden');return}const hits=SCHOOLS.filter(x=>norm(x.name).includes(n)||x.aliases.some(a=>norm(a).includes(n))).slice(0,8);if(!hits.length){box.innerHTML='<div class="suggestion"><span>No matching university</span></div>';box.classList.remove('hidden');return}box.innerHTML=hits.map((x,i)=>`<div class="suggestion" onclick="selectSchool(${SCHOOLS.indexOf(x)})"><b>${x.name}</b><span>${x.aliases.slice(0,3).join(' · ')}</span></div>`).join('');box.classList.remove('hidden')}
-function selectSchool(i){const x=SCHOOLS[i];s.selectedSchool=x.name;$('guess').value=x.name;$('suggestions').classList.add('hidden');$('selectedSchool').textContent=`Selected: ${x.name}`}
+function schoolList(){return Object.entries(SCHOOL_META).map(([name,m])=>({name,aliases:m.aliases||[]})).sort((a,b)=>a.name.localeCompare(b.name))}
+const SCHOOLS=schoolList();
+function showSuggestions(){s.selectedSchool=null;$('selectedSchool').textContent='Select a university from the list to submit.';const raw=$('guess').value.trim(),n=norm(raw),box=$('suggestions');if(!raw){box.classList.add('hidden');return}const hits=SCHOOLS.filter(x=>norm(x.name).includes(n)||x.aliases.some(a=>norm(a).includes(n))).slice(0,8);if(!hits.length){box.innerHTML='<div class="suggestion"><span>No matching university</span></div>';box.classList.remove('hidden');return}box.innerHTML=hits.map((x,i)=>`<div class="suggestion" onclick="selectSchoolByName('${x.name.replace(/'/g,"\\'")}')"><b>${x.name}</b><span>${x.aliases.slice(0,3).join(' · ')}</span></div>`).join('');box.classList.remove('hidden')}
+function selectSchoolByName(name){s.selectedSchool=name;$('guess').value=name;$('suggestions').classList.add('hidden');$('selectedSchool').textContent=`Selected: ${name}`}
 function isCorrect(v){return norm(v)===norm(s.current.school)}
 function submitGuess(){if(!s.selectedSchool){$('feedback').innerHTML='<span class="bad"><b>Please select a university from the autocomplete list.</b></span>';return}const v=s.selectedSchool;if(isCorrect(v)){const pts=SCORE[s.clueCount];s.scores[s.turn]+=pts;$('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · +${pts} points</span>`;finishTurn()}else{$('feedback').innerHTML=`<span class="bad"><b>Not quite.</b></span> A new clue is required before another guess.`;$('guessbtn').disabled=true;if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;s.selectedSchool=null;$('guess').value='';$('selectedSchool').textContent='Select a university from the list to submit.';$('guess').focus()},350)}else{finishTurn()}}}
 function finishTurn(){$('guessbtn').disabled=true;$('cluebtn').disabled=true;updateScores();setTimeout(()=>{s.round++;if(!s.single)s.turn=1-s.turn;if(s.round>=s.total){showEnd();return}$('game').classList.add('hidden');if(s.single){beginTurn()}else{$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[s.turn]}},800)}
 function showEnd(){$('game').classList.add('hidden');$('end').classList.remove('hidden');$('final1name').textContent=s.players[0];$('final1score').textContent=s.scores[0];$('final2name').textContent=s.single?'Questions':s.players[1];$('final2score').textContent=s.single?s.total:s.scores[1];$('winner').textContent=s.single?`Final score: ${s.scores[0]} / ${s.total*10}`:(s.scores[0]===s.scores[1]?'Tie game!':`${s.players[s.scores[0]>s.scores[1]?0:1]} wins!`)}
 function resetGame(){$('end').classList.add('hidden');$('setup').classList.remove('hidden')}
-$('guess').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('guessbtn').disabled)submitGuess()});document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete'))$('suggestions').classList.add('hidden')});toggleGameType();
+$('guess').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('guessbtn').disabled)submitGuess()});document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete'))$('suggestions').classList.add('hidden')});toggleGameType();loadExpandedPool();
 </script>
 </body>
 </html>
