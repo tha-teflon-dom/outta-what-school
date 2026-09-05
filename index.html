@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Outta What School?</title>
+<style>
+:root{--bg:#08111f;--panel:#111d31;--panel2:#17243b;--text:#f7f9fc;--muted:#9fb0c7;--accent:#58d68d;--warn:#ffd166;--bad:#ff6b6b;--line:#263a5a}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#142640 0,#08111f 48%);color:var(--text);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+.app{max-width:720px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 30px)}
+.brand{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}.title{font-size:38px;line-height:1;margin:8px 0 8px;font-weight:950;letter-spacing:-.04em}.subtitle{color:var(--muted);margin:0 0 20px}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.25);margin:14px 0}.row{display:flex;gap:12px}.row>*{flex:1}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:7px}.big{font-size:34px;font-weight:950;letter-spacing:-.03em}.score{font-size:28px;font-weight:900}.scoreline{display:flex;justify-content:space-between;gap:10px}.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+input,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#0a1527;color:var(--text);padding:14px 13px;font-size:16px;outline:none}input:focus,select:focus{border-color:#4f7fb6}.btn{appearance:none;width:100%;border:0;border-radius:15px;padding:14px 15px;font-size:16px;font-weight:900;cursor:pointer}.primary{background:var(--accent);color:#062112}.secondary{background:#213654;color:var(--text)}.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}.danger{background:#422130;color:#ffd8df}.btn:disabled{opacity:.45;cursor:default}
+.clue{padding:13px 14px;background:#0a1527;border-left:4px solid var(--warn);border-radius:12px;margin:10px 0}.clue b{display:block;font-size:11px;text-transform:uppercase;color:var(--warn);letter-spacing:.08em;margin-bottom:4px}.center{text-align:center}.hidden{display:none!important}.spacer{height:6px}.tiny{font-size:12px;color:var(--muted)}.turn{font-size:13px;color:var(--accent);font-weight:900}.divider{height:1px;background:var(--line);margin:14px 0}.answer{font-size:24px;font-weight:950}.good{color:var(--accent)}.bad{color:var(--bad)}.footer{margin-top:18px;color:#71849f;font-size:11px;line-height:1.5}.tag{display:inline-block;margin:3px 5px 0 0;padding:5px 8px;border-radius:999px;background:#0a1527;border:1px solid var(--line);font-size:11px;color:#b8c7d9}
+@media(max-width:520px){.title{font-size:32px}.big{font-size:30px}.row{flex-direction:column}.scoreline{gap:6px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand">Local H2H Prototype</div>
+  <div class="title">OUTTA WHAT SCHOOL?</div>
+  <p class="subtitle">Guess the final college an NFL player played for. Fewer clues = more points.</p>
+
+  <section id="setup" class="card">
+    <div class="label">Players</div>
+    <div class="row">
+      <input id="p1name" value="Player 1" maxlength="18" />
+      <input id="p2name" value="Player 2" maxlength="18" />
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <div><div class="label">Rounds</div><select id="rounds"><option>6</option><option selected>10</option><option>14</option></select></div>
+      <div><div class="label">Mode</div><select id="mode"><option selected>Football Fan</option><option>Casual</option><option>Sicko</option></select></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn primary" onclick="startGame()">START GAME</button>
+    <div class="footer">Prototype dataset: 25 recognizable NFL players. Answer matching accepts common school aliases.</div>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="card">
+      <div class="scoreline">
+        <div><div class="label" id="p1label">Player 1</div><div class="score" id="p1score">0</div></div>
+        <div class="center"><div class="pill" id="roundpill">Round 1 / 10</div><div class="tiny" style="margin-top:8px">Potential: <b id="potential">10</b></div></div>
+        <div style="text-align:right"><div class="label" id="p2label">Player 2</div><div class="score" id="p2score">0</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="turn" id="turnlabel">PLAYER 1'S TURN</div>
+      <div class="label" style="margin-top:14px">NFL Player</div>
+      <div class="big" id="nflplayer">Patrick Mahomes</div>
+      <div id="position" class="tag">QB</div>
+      <div class="divider"></div>
+      <div id="clues"></div>
+      <div class="label">Your guess</div>
+      <input id="guess" placeholder="Type a college or university" autocomplete="off" />
+      <div class="spacer"></div>
+      <div class="row">
+        <button class="btn primary" id="guessbtn" onclick="submitGuess()">SUBMIT GUESS</button>
+        <button class="btn secondary" id="cluebtn" onclick="revealClue()">I NEED A CLUE — 8 PTS</button>
+      </div>
+      <div id="feedback" class="tiny" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section id="handoff" class="card hidden center">
+    <div class="label">Pass the phone</div>
+    <div class="big" id="handoffName">Player 2</div>
+    <p class="subtitle">The next question is ready. Tap below when you're set.</p>
+    <button class="btn primary" onclick="beginTurn()">READY</button>
+  </section>
+
+  <section id="end" class="card hidden center">
+    <div class="label">Final Score</div>
+    <div class="big" id="winner">Player 1 wins!</div>
+    <div class="row" style="margin-top:18px">
+      <div class="card"><div class="label" id="final1name">Player 1</div><div class="score" id="final1score">0</div></div>
+      <div class="card"><div class="label" id="final2name">Player 2</div><div class="score" id="final2score">0</div></div>
+    </div>
+    <button class="btn primary" onclick="resetGame()">REMATCH</button>
+  </section>
+</div>
+<script>
+const SCORE=[10,8,6,4,2,1];
+const Q=[
+{p:'Patrick Mahomes',pos:'QB',school:'Texas Tech',aliases:['texas tech university','ttu','red raiders'],clues:[['Alumni','Another Pro Bowl NFL quarterback from this school: Baker Mayfield began his college career here.'],['Conference','The school currently competes in the Big 12.'],['Colors','Official athletics colors include Raider Red and black.'],['Rivalry','Its in-state rivalry with TCU is played for the Saddle Trophy.'],['Team name','Red Raiders']]},
+{p:'Josh Allen',pos:'QB',school:'Wyoming',aliases:['university of wyoming','wyoming cowboys','uw'],clues:[['Conference','The school competes in the Mountain West.'],['Colors','Its best-known colors are brown and gold.'],['Rivalry','It plays Colorado State for the Bronze Boot.'],['Alumni','Pro Bowl defensive back Tashaun Gipson also played here.'],['Team name','Cowboys']]},
+{p:'Joe Burrow',pos:'QB',school:'LSU',aliases:['louisiana state','louisiana state university','tigers'],clues:[['Teammate','Justin Jefferson was a college teammate.'],['Conference','The school competes in the SEC.'],['Colors','Its official colors are purple and gold.'],['Rivalry','It plays Arkansas for the Golden Boot.'],['Team name','Tigers']]},
+{p:'Jalen Hurts',pos:'QB',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','CeeDee Lamb was a college teammate.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Texas in the Red River Rivalry.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
+{p:'Baker Mayfield',pos:'QB',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','Mark Andrews was a college teammate.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Oklahoma State for the Bedlam Bell.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
+{p:'Lamar Jackson',pos:'QB',school:'Louisville',aliases:['university of louisville','louisville cardinals','uofl'],clues:[['Conference','The school competes in the ACC.'],['Colors','Its athletics identity prominently uses red, black and white.'],['Rivalry','Its annual rivalry with Kentucky is played for the Governor’s Cup.'],['Alumni','Pro Bowl cornerback Jaire Alexander also played here.'],['Team name','Cardinals']]},
+{p:'Justin Herbert',pos:'QB',school:'Oregon',aliases:['university of oregon','oregon ducks','uo'],clues:[['Conference','The school currently competes in the Big Ten.'],['Colors','Its traditional athletics colors are green and yellow.'],['Rivalry','Its rivalry with Oregon State is commonly known as the Civil War.'],['Alumni','Pro Bowl defensive lineman Haloti Ngata also played here.'],['Team name','Ducks']]},
+{p:'Dak Prescott',pos:'QB',school:'Mississippi State',aliases:['mississippi state university','msu','bulldogs'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its primary colors are maroon and white.'],['Rivalry','It plays Ole Miss in the Egg Bowl.'],['Alumni','Pro Bowl defensive lineman Chris Jones also played here.'],['Team name','Bulldogs']]},
+{p:'Christian McCaffrey',pos:'RB',school:'Stanford',aliases:['stanford university','stanford cardinal','cardinal'],clues:[['Conference','The school currently competes in the ACC.'],['Colors','Its official school colors are cardinal and white.'],['Rivalry','Its rivalry with California is The Big Game, played for the Stanford Axe.'],['Alumni','Andrew Luck also played here.'],['Team name','Cardinal — singular.']]},
+{p:'Saquon Barkley',pos:'RB',school:'Penn State',aliases:['pennsylvania state university','the pennsylvania state university','psu','nittany lions'],clues:[['Teammate','Micah Parsons later starred for the same program.'],['Conference','The school competes in the Big Ten.'],['Colors','Its colors are blue and white.'],['Rivalry','It competes with Michigan State for the Land Grant Trophy.'],['Team name','Nittany Lions']]},
+{p:'Derrick Henry',pos:'RB',school:'Alabama',aliases:['university of alabama','bama','crimson tide'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its best-known colors are crimson and white.'],['Rivalry','It plays Auburn in the Iron Bowl.'],['Alumni','Julio Jones also played here.'],['Team name','Crimson Tide']]},
+{p:'Josh Jacobs',pos:'RB',school:'Alabama',aliases:['university of alabama','bama','crimson tide'],clues:[['Teammate','He shared a college backfield room with Derrick Henry early in his career.'],['Conference','The school competes in the SEC.'],['Colors','Its best-known colors are crimson and white.'],['Rivalry','It plays Tennessee on the Third Saturday in October.'],['Team name','Crimson Tide']]},
+{p:'Justin Jefferson',pos:'WR',school:'LSU',aliases:['louisiana state','louisiana state university','tigers'],clues:[['Teammate','Joe Burrow was his college quarterback.'],['Conference','The school competes in the SEC.'],['Colors','Its official colors are purple and gold.'],['Rivalry','It plays Arkansas for the Golden Boot.'],['Team name','Tigers']]},
+{p:"Ja'Marr Chase",pos:'WR',school:'LSU',aliases:['louisiana state','louisiana state university','tigers'],clues:[['Teammate','Justin Jefferson was a college teammate.'],['Conference','The school competes in the SEC.'],['Colors','Its official colors are purple and gold.'],['Rivalry','It plays Arkansas for the Golden Boot.'],['Team name','Tigers']]},
+{p:'CeeDee Lamb',pos:'WR',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','Jalen Hurts was his college quarterback for one season.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Texas in the Red River Rivalry.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
+{p:'A.J. Brown',pos:'WR',school:'Ole Miss',aliases:['university of mississippi','mississippi','ole miss rebels','rebels'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its athletics palette prominently features red and navy.'],['Rivalry','It plays Mississippi State in the Egg Bowl.'],['Alumni','Pro Bowl receiver DK Metcalf also played here.'],['Team name','Rebels']]},
+{p:'Travis Kelce',pos:'TE',school:'Cincinnati',aliases:['university of cincinnati','cincinnati bearcats','uc','bearcats'],clues:[['Conference','The school currently competes in the Big 12.'],['Colors','Its primary colors are red and black.'],['Rivalry','It plays Miami (Ohio) for the Victory Bell.'],['Alumni','Pro Bowl cornerback Sauce Gardner also played here.'],['Team name','Bearcats']]},
+{p:'George Kittle',pos:'TE',school:'Iowa',aliases:['university of iowa','iowa hawkeyes','hawkeyes'],clues:[['Conference','The school competes in the Big Ten.'],['Colors','Its colors are black and gold.'],['Rivalry','It plays Iowa State for the Cy-Hawk Trophy.'],['Alumni','Pro Bowl tight end T.J. Hockenson also played here.'],['Team name','Hawkeyes']]},
+{p:'Mark Andrews',pos:'TE',school:'Oklahoma',aliases:['university of oklahoma','ou','sooners'],clues:[['Teammate','Baker Mayfield was his college quarterback.'],['Conference','The school currently competes in the SEC.'],['Rivalry','It plays Texas in the Red River Rivalry.'],['Colors','Its traditional colors are Crimson & Cream.'],['Team name','Sooners']]},
+{p:'T.J. Watt',pos:'DEF',school:'Wisconsin',aliases:['university of wisconsin','wisconsin madison','wisconsin badgers','uw madison','badgers'],clues:[['Conference','The school competes in the Big Ten.'],['Colors','Its primary colors are cardinal and white.'],['Rivalry','It plays Minnesota for Paul Bunyan’s Axe.'],['Alumni','J.J. Watt also played here.'],['Team name','Badgers']]},
+{p:'Myles Garrett',pos:'DEF',school:'Texas A&M',aliases:['texas a&m university','tamu','aggies','texas am'],clues:[['Conference','The school competes in the SEC.'],['Colors','Its primary school colors are maroon and white.'],['Rivalry','Its historic rivalry with Texas is known as the Lone Star Showdown.'],['Alumni','Pro Bowl receiver Mike Evans also played here.'],['Team name','Aggies']]},
+{p:'Micah Parsons',pos:'DEF',school:'Penn State',aliases:['pennsylvania state university','the pennsylvania state university','psu','nittany lions'],clues:[['Teammate','Saquon Barkley starred at the same program immediately before him.'],['Conference','The school competes in the Big Ten.'],['Colors','Its colors are blue and white.'],['Rivalry','It competes with Michigan State for the Land Grant Trophy.'],['Team name','Nittany Lions']]},
+{p:'Jalen Ramsey',pos:'DEF',school:'Florida State',aliases:['florida state university','fsu','seminoles'],clues:[['Conference','The school competes in the ACC.'],['Colors','Its core athletics colors are garnet and gold.'],['Rivalry','It plays Florida for the Makala Trophy.'],['Alumni','Pro Bowl running back Dalvin Cook also played here.'],['Team name','Seminoles']]},
+{p:'Sauce Gardner',pos:'DEF',school:'Cincinnati',aliases:['university of cincinnati','cincinnati bearcats','uc','bearcats'],clues:[['Conference','The school currently competes in the Big 12.'],['Colors','Its primary colors are red and black.'],['Rivalry','It plays Miami (Ohio) for the Victory Bell.'],['Alumni','Travis Kelce also played here.'],['Team name','Bearcats']]},
+{p:'Nick Bosa',pos:'DEF',school:'Ohio State',aliases:['the ohio state university','ohio state university','osu','buckeyes'],clues:[['Conference','The school competes in the Big Ten.'],['Colors','Its official colors are scarlet and gray.'],['Rivalry','Its annual game against Michigan is simply known as The Game.'],['Alumni','Joey Bosa also played here.'],['Team name','Buckeyes']]}
+];
+let s={players:['Player 1','Player 2'],scores:[0,0],turn:0,round:0,total:10,deck:[],clueCount:0,current:null,answered:false};
+const $=id=>document.getElementById(id);
+function norm(x){return x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').replace(/^the/,'')}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function startGame(){s.players=[$('p1name').value.trim()||'Player 1',$('p2name').value.trim()||'Player 2'];s.scores=[0,0];s.turn=0;s.round=0;s.total=+$('rounds').value;s.deck=shuffle(Q).slice(0,s.total);$('setup').classList.add('hidden');$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[0];updateScores()}
+function beginTurn(){ $('handoff').classList.add('hidden');$('game').classList.remove('hidden');s.current=s.deck[s.round];s.clueCount=0;s.answered=false;$('guess').value='';$('clues').innerHTML='';$('feedback').textContent='';$('nflplayer').textContent=s.current.p;$('position').textContent=s.current.pos;$('roundpill').textContent=`Round ${s.round+1} / ${s.total}`;$('turnlabel').textContent=`${s.players[s.turn].toUpperCase()}'S TURN`;$('potential').textContent=SCORE[0];$('cluebtn').textContent='I NEED A CLUE — 8 PTS';$('guessbtn').disabled=false;$('cluebtn').disabled=false;updateScores();setTimeout(()=>$('guess').focus(),100)}
+function updateScores(){$('p1label').textContent=s.players[0];$('p2label').textContent=s.players[1];$('p1score').textContent=s.scores[0];$('p2score').textContent=s.scores[1]}
+function revealClue(){if(s.clueCount>=5)return;const c=s.current.clues[s.clueCount];const div=document.createElement('div');div.className='clue';div.innerHTML=`<b>Clue ${s.clueCount+1} · ${c[0]}</b>${c[1]}`;$('clues').appendChild(div);s.clueCount++;$('potential').textContent=SCORE[s.clueCount];if(s.clueCount<5)$('cluebtn').textContent=`I NEED A CLUE — ${SCORE[s.clueCount+1]} PTS`;else{$('cluebtn').disabled=true;$('cluebtn').textContent='ALL CLUES REVEALED'}}
+function isCorrect(v){const n=norm(v);return [s.current.school,...s.current.aliases].some(a=>norm(a)===n)}
+function submitGuess(){const v=$('guess').value.trim();if(!v)return;if(isCorrect(v)){const pts=SCORE[s.clueCount];s.scores[s.turn]+=pts;$('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · +${pts} points</span>`;finishTurn()}else{$('feedback').innerHTML=`<span class="bad"><b>Not quite.</b></span> A new clue is required before another guess.`;$('guessbtn').disabled=true;if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;$('guess').value='';$('guess').focus()},350)}else{finishTurn()}}}
+function finishTurn(){$('guessbtn').disabled=true;$('cluebtn').disabled=true;updateScores();setTimeout(()=>{s.round++;s.turn=1-s.turn;if(s.round>=s.total){showEnd();return}$('game').classList.add('hidden');$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[s.turn]},800)}
+function showEnd(){$('game').classList.add('hidden');$('end').classList.remove('hidden');$('final1name').textContent=s.players[0];$('final2name').textContent=s.players[1];$('final1score').textContent=s.scores[0];$('final2score').textContent=s.scores[1];$('winner').textContent=s.scores[0]===s.scores[1]?'Tie game!':`${s.players[s.scores[0]>s.scores[1]?0:1]} wins!`}
+function resetGame(){$('end').classList.add('hidden');$('setup').classList.remove('hidden')}
+$('guess').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('guessbtn').disabled)submitGuess()});
+</script>
+</body>
+</html>
