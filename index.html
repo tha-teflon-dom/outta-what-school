@@ -13,38 +13,37 @@
 .brand{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}.title{font-size:38px;line-height:1;margin:8px 0 8px;font-weight:950;letter-spacing:-.04em}.subtitle{color:var(--muted);margin:0 0 20px}
 .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.25);margin:14px 0}.row{display:flex;gap:12px}.row>*{flex:1}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:7px}.big{font-size:34px;font-weight:950;letter-spacing:-.03em}.score{font-size:28px;font-weight:900}.scoreline{display:flex;justify-content:space-between;gap:10px}.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
 input,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#0a1527;color:var(--text);padding:14px 13px;font-size:16px;outline:none}input:focus,select:focus{border-color:#4f7fb6}.btn{appearance:none;width:100%;border:0;border-radius:15px;padding:14px 15px;font-size:16px;font-weight:900;cursor:pointer}.primary{background:var(--accent);color:#062112}.secondary{background:#213654;color:var(--text)}.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}.danger{background:#422130;color:#ffd8df}.btn:disabled{opacity:.45;cursor:default}
-.autocomplete{position:relative}.suggestions{position:absolute;z-index:20;left:0;right:0;top:100%;margin-top:6px;background:#0a1527;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35);max-height:240px;overflow-y:auto}.suggestion{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}.suggestion:last-child{border-bottom:0}.suggestion b{display:block}.suggestion span{font-size:11px;color:var(--muted)}.suggestion:hover,.suggestion.active{background:#152743}.selected-school{font-size:12px;color:var(--accent);margin-top:7px}.clue{padding:13px 14px;background:#0a1527;border-left:4px solid var(--warn);border-radius:12px;margin:10px 0}.clue b{display:block;font-size:11px;text-transform:uppercase;color:var(--warn);letter-spacing:.08em;margin-bottom:4px}.center{text-align:center}.hidden{display:none!important}.spacer{height:6px}.tiny{font-size:12px;color:var(--muted)}.turn{font-size:13px;color:var(--accent);font-weight:900}.divider{height:1px;background:var(--line);margin:14px 0}.answer{font-size:24px;font-weight:950}.good{color:var(--accent)}.bad{color:var(--bad)}.footer{margin-top:18px;color:#71849f;font-size:11px;line-height:1.5}.tag{display:inline-block;margin:3px 5px 0 0;padding:5px 8px;border-radius:999px;background:#0a1527;border:1px solid var(--line);font-size:11px;color:#b8c7d9}
+.autocomplete{position:relative}.suggestions{position:absolute;z-index:20;left:0;right:0;top:100%;margin-top:6px;background:#0a1527;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35);max-height:240px;overflow-y:auto}.suggestion{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}.suggestion:last-child{border-bottom:0}.suggestion b{display:block}.suggestion span{font-size:11px;color:var(--muted)}.suggestion:hover,.suggestion.active{background:#152743}.selected-school{font-size:12px;color:var(--accent);margin-top:7px}.clue{padding:13px 14px;background:#0a1527;border-left:4px solid var(--warn);border-radius:12px;margin:10px 0}.clue b{display:block;font-size:11px;text-transform:uppercase;color:var(--warn);letter-spacing:.08em;margin-bottom:4px}.center{text-align:center}.hidden{display:none!important}.spacer{height:6px}.tiny{font-size:12px;color:var(--muted)}.turn{font-size:13px;color:var(--accent);font-weight:900}.divider{height:1px;background:var(--line);margin:14px 0}.answer{font-size:24px;font-weight:950}.good{color:var(--accent)}.bad{color:var(--bad)}.footer{margin-top:18px;color:#71849f;font-size:11px;line-height:1.5}.tag{display:inline-block;margin:3px 5px 0 0;padding:5px 8px;border-radius:999px;background:#0a1527;border:1px solid var(--line);font-size:11px;color:#b8c7d9}.prompt{font-size:24px;font-weight:950;letter-spacing:.04em;text-align:center;margin:18px 0 14px;color:var(--warn)}.timer{font-variant-numeric:tabular-nums;font-size:28px;font-weight:950}.leaderboard{width:100%;border-collapse:collapse;margin-top:12px}.leaderboard th,.leaderboard td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}.leaderboard th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.leaderboard td:last-child,.leaderboard th:last-child{text-align:right}.leaderboard tr.current{background:#142640}
 @media(max-width:520px){.title{font-size:32px}.big{font-size:30px}.row{flex-direction:column}.scoreline{gap:6px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="brand">Expanded Beta · Local Play</div>
+  <div class="brand">Clue Engine Beta · Local Play</div>
   <div class="title">OUTTA WHAT SCHOOL?</div>
   <p class="subtitle">Guess the final college an NFL player played for. Fewer clues = more points.</p>
 
   <section id="setup" class="card">
     <div class="row">
-      <div><div class="label">Game Type</div><select id="gameType" onchange="toggleGameType()"><option value="single">Single Player</option><option value="h2h" selected>2 Player H2H</option></select></div>
       <div><div class="label">Rounds</div><select id="rounds"><option>6</option><option selected>10</option><option>14</option></select></div>
+      <div><div class="label">Round Timer</div><select id="timerSetting"><option value="10" selected>10 seconds</option><option value="15">15 seconds</option><option value="20">20 seconds</option></select></div>
     </div>
     <div class="spacer"></div>
     <div class="label">Player Name</div>
     <input id="p1name" value="Player 1" maxlength="18" />
-    <div id="p2wrap" style="margin-top:12px"><div class="label">Player 2 Name</div><input id="p2name" value="Player 2" maxlength="18" /></div>
     <div class="spacer"></div>
     <div><div class="label">Difficulty</div><select id="mode"><option selected>Football Fan</option><option>Casual</option><option>Sicko</option></select></div>
     <div class="spacer"></div>
     <button class="btn primary" id="startBtn" onclick="startGame()" disabled>START GAME</button>
-    <div class="footer" id="poolStatus">Loading expanded 500-player pool…</div>
+    <div class="footer" id="poolStatus">Loading expanded 500-player pool + ranked clue engine…</div>
   </section>
 
   <section id="game" class="hidden">
     <div class="card">
       <div class="scoreline">
-        <div><div class="label" id="p1label">Player 1</div><div class="score" id="p1score">0</div></div>
-        <div class="center"><div class="pill" id="roundpill">Round 1 / 10</div><div class="tiny" style="margin-top:8px">Potential: <b id="potential">10</b></div></div>
-        <div style="text-align:right"><div class="label" id="p2label">Player 2</div><div class="score" id="p2score">0</div></div>
+        <div><div class="label" id="p1label">Player 1</div><div class="score" id="p1score">0.0</div></div>
+        <div class="center"><div class="pill" id="roundpill">Round 1 / 10</div><div class="tiny" style="margin-top:8px">Base points: <b id="potential">10</b></div></div>
+        <div style="text-align:right"><div class="label">Time Remaining</div><div class="timer" id="timer">10.0</div><div class="tiny">Weighted potential: <b id="weightedPotential">100.0</b></div></div>
       </div>
     </div>
 
@@ -55,6 +54,7 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
       <div id="position" class="tag">QB</div>
       <div class="divider"></div>
       <div id="clues"></div>
+      <div class="prompt">OUT OF WHAT SCHOOL?!</div>
       <div class="label">Your guess</div>
       <div class="autocomplete">
         <input id="guess" placeholder="Start typing a school (e.g. Bama, PSU, Cincy)" autocomplete="off" oninput="showSuggestions()" />
@@ -70,25 +70,19 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
     </div>
   </section>
 
-  <section id="handoff" class="card hidden center">
-    <div class="label">Pass the phone</div>
-    <div class="big" id="handoffName">Player 2</div>
-    <p class="subtitle">The next question is ready. Tap below when you're set.</p>
-    <button class="btn primary" onclick="beginTurn()">READY</button>
-  </section>
-
   <section id="end" class="card hidden center">
-    <div class="label">Final Score</div>
-    <div class="big" id="winner">Player 1 wins!</div>
-    <div class="row" style="margin-top:18px">
-      <div class="card"><div class="label" id="final1name">Player 1</div><div class="score" id="final1score">0</div></div>
-      <div class="card"><div class="label" id="final2name">Player 2</div><div class="score" id="final2score">0</div></div>
-    </div>
-    <button class="btn primary" onclick="resetGame()">REMATCH</button>
+    <div class="label">Final Weighted Score</div>
+    <div class="big" id="winner">0.0</div>
+    <div class="tiny" id="endDetail" style="margin-top:8px"></div>
+    <div class="divider"></div>
+    <div class="label">High Scores on This Device</div>
+    <div id="highScores"></div>
+    <button class="btn primary" style="margin-top:16px" onclick="resetGame()">PLAY AGAIN</button>
   </section>
 </div>
 <script>
 const SCORE=[10,8,6,4,2,1];
+const HIGH_SCORE_KEY='outtaWhatSchool.highScores.v1';
 const TARGET_POOL=500;
 const DATA_URL='https://raw.githubusercontent.com/phcs971/nfl-draft-dataset/main/nfl_data.csv';
 
@@ -157,23 +151,98 @@ const SCHOOL_META={
 'Wyoming':{data:['Wyoming'],aliases:['uwyo','university of wyoming','cowboys'],conf:'Mountain West',colors:'brown and gold',rivalry:'Colorado State for the Bronze Boot',team:'Cowboys'}
 };
 
+
+// Optional school-specific clue intelligence. reveal: 1 = very hard, 10 = near-giveaway.
+// Championship counts use each program's commonly claimed major-college national titles.
+const SCHOOL_EXTRA={
+'Alabama':{mascot:'Big Al',titles:18,lastTitle:2020,lastOpponent:'Ohio State',rivalryReveal:9,colorsReveal:8,teamReveal:10},
+'LSU':{mascot:'Mike the Tiger',mascotClue:'Mike',titles:4,lastTitle:2019,lastOpponent:'Clemson',rivalryReveal:5,colorsReveal:7,teamReveal:7},
+'Ohio State':{mascot:'Brutus Buckeye',mascotClue:'Brutus',titles:8,lastTitle:2014,lastOpponent:'Oregon',rivalryReveal:10,colorsReveal:8,teamReveal:10},
+'Georgia':{mascot:'Uga',titles:4,lastTitle:2022,lastOpponent:'TCU',rivalryReveal:7,colorsReveal:6,teamReveal:8},
+'Michigan':{mascot:null,titles:12,lastTitle:2023,lastOpponent:'Washington',rivalryReveal:10,colorsReveal:10,teamReveal:9},
+'Clemson':{mascot:'The Tiger',mascotClue:'The Tiger',titles:3,lastTitle:2018,lastOpponent:'Alabama',rivalryReveal:7,colorsReveal:8,teamReveal:6},
+'Oklahoma':{mascot:'Boomer and Sooner',titles:7,lastTitle:2000,lastOpponent:'Florida State',rivalryReveal:10,colorsReveal:9,teamReveal:9},
+'Texas':{mascot:'Bevo',titles:4,lastTitle:2005,lastOpponent:'USC',rivalryReveal:10,colorsReveal:10,teamReveal:10},
+'Texas A&M':{mascot:'Reveille',titles:3,lastTitle:1939,lastOpponent:null,rivalryReveal:10,colorsReveal:6,teamReveal:7},
+'Florida':{mascot:'Albert and Alberta',titles:3,lastTitle:2008,lastOpponent:'Oklahoma',rivalryReveal:7,colorsReveal:6,teamReveal:7},
+'Florida State':{mascot:'Osceola and Renegade',titles:3,lastTitle:2013,lastOpponent:'Auburn',rivalryReveal:10,colorsReveal:9,teamReveal:9},
+'Miami (FL)':{mascot:'Sebastian the Ibis',mascotClue:'Sebastian',titles:5,lastTitle:2001,lastOpponent:'Nebraska',rivalryReveal:10,colorsReveal:8,teamReveal:8},
+'Penn State':{mascot:'Nittany Lion',mascotClue:'Nittany Lion',titles:2,lastTitle:1986,lastOpponent:'Miami (FL)',rivalryReveal:6,colorsReveal:4,teamReveal:10},
+'Wisconsin':{mascot:'Bucky Badger',mascotClue:'Bucky',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:7,colorsReveal:6,teamReveal:8},
+'Iowa':{mascot:'Herky the Hawk',mascotClue:'Herky',titles:1,lastTitle:1958,lastOpponent:null,rivalryReveal:10,colorsReveal:7,teamReveal:8},
+'Notre Dame':{mascot:'The Leprechaun',mascotClue:'The Leprechaun',titles:11,lastTitle:1988,lastOpponent:'West Virginia',rivalryReveal:8,colorsReveal:7,teamReveal:10},
+'Oregon':{mascot:'The Oregon Duck',mascotClue:'The Duck',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:7,teamReveal:9},
+'USC':{mascot:'Traveler',titles:11,lastTitle:2004,lastOpponent:'Oklahoma',rivalryReveal:8,colorsReveal:9,teamReveal:8},
+'UCLA':{mascot:'Joe and Josephine Bruin',mascotClue:'Joe and Josephine',titles:1,lastTitle:1954,lastOpponent:null,rivalryReveal:9,colorsReveal:6,teamReveal:8},
+'Washington':{mascot:'Harry the Husky',mascotClue:'Harry',titles:2,lastTitle:1991,lastOpponent:null,rivalryReveal:10,colorsReveal:7,teamReveal:8},
+'Stanford':{mascot:'The Stanford Tree',mascotClue:'The Tree',titles:2,lastTitle:1940,lastOpponent:null,rivalryReveal:9,colorsReveal:9,teamReveal:8},
+'California':{mascot:'Oski the Bear',mascotClue:'Oski',titles:5,lastTitle:1937,lastOpponent:null,rivalryReveal:9,colorsReveal:10,teamReveal:9},
+'Tennessee':{mascot:'Smokey',titles:6,lastTitle:1998,lastOpponent:'Florida State',rivalryReveal:7,colorsReveal:9,teamReveal:8},
+'Auburn':{mascot:'Aubie the Tiger',mascotClue:'Aubie',titles:2,lastTitle:2010,lastOpponent:'Oregon',rivalryReveal:10,colorsReveal:7,teamReveal:6},
+'Ole Miss':{mascot:'Tony the Landshark',mascotClue:'Tony',titles:3,lastTitle:1962,lastOpponent:null,rivalryReveal:10,colorsReveal:6,teamReveal:8},
+'Mississippi State':{mascot:'Bully',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:5,teamReveal:8},
+'Arkansas':{mascot:'Tusk',titles:1,lastTitle:1964,lastOpponent:null,rivalryReveal:6,colorsReveal:5,teamReveal:9},
+'South Carolina':{mascot:'Cocky',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:7,colorsReveal:7,teamReveal:9},
+'Kentucky':{mascot:'The Wildcat',mascotClue:'The Wildcat',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:4,teamReveal:6},
+'Missouri':{mascot:'Truman the Tiger',mascotClue:'Truman',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:6,colorsReveal:7,teamReveal:6},
+'Louisville':{mascot:'Louie the Cardinal',mascotClue:'Louie',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:6,teamReveal:6},
+'Cincinnati':{mascot:'The Bearcat',mascotClue:'The Bearcat',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:8,colorsReveal:5,teamReveal:8},
+'TCU':{mascot:'SuperFrog',titles:2,lastTitle:1938,lastOpponent:null,rivalryReveal:6,colorsReveal:6,teamReveal:9},
+'Baylor':{mascot:'Judge Indy and Judge Belle',mascotClue:'Judge Indy and Judge Belle',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:6,colorsReveal:6,teamReveal:5},
+'Texas Tech':{mascot:'Raider Red',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:6,colorsReveal:7,teamReveal:10},
+'Oklahoma State':{mascot:'Pistol Pete',titles:1,lastTitle:1945,lastOpponent:null,rivalryReveal:9,colorsReveal:8,teamReveal:5},
+'Kansas State':{mascot:'Willie the Wildcat',mascotClue:'Willie',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:5,teamReveal:5},
+'West Virginia':{mascot:'The Mountaineer',mascotClue:'The Mountaineer',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:7,colorsReveal:7,teamReveal:9},
+'North Carolina':{mascot:'Rameses',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:10,teamReveal:9},
+'NC State':{mascot:'Mr. and Mrs. Wuf',mascotClue:'Mr. and Mrs. Wuf',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:3,teamReveal:8},
+'Virginia Tech':{mascot:'HokieBird',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:9,colorsReveal:10,teamReveal:10},
+'Pittsburgh':{mascot:'Roc the Panther',mascotClue:'Roc',titles:9,lastTitle:1976,lastOpponent:null,rivalryReveal:7,colorsReveal:6,teamReveal:5},
+'Boston College':{mascot:'Baldwin the Eagle',mascotClue:'Baldwin',titles:1,lastTitle:1940,lastOpponent:null,rivalryReveal:5,colorsReveal:6,teamReveal:4},
+'Maryland':{mascot:'Testudo',titles:1,lastTitle:1953,lastOpponent:null,rivalryReveal:5,colorsReveal:7,teamReveal:9},
+'Michigan State':{mascot:'Sparty',titles:6,lastTitle:1966,lastOpponent:null,rivalryReveal:10,colorsReveal:6,teamReveal:10},
+'Nebraska':{mascot:'Herbie Husker',mascotClue:'Herbie',titles:5,lastTitle:1997,lastOpponent:'Tennessee',rivalryReveal:6,colorsReveal:7,teamReveal:9},
+'Minnesota':{mascot:'Goldy Gopher',mascotClue:'Goldy',titles:7,lastTitle:1960,lastOpponent:null,rivalryReveal:8,colorsReveal:7,teamReveal:9},
+'Purdue':{mascot:'Purdue Pete',mascotClue:'Pete',titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:8,teamReveal:10},
+'Indiana':{mascot:null,titles:0,lastTitle:null,lastOpponent:null,rivalryReveal:10,colorsReveal:8,teamReveal:10},
+'Illinois':{mascot:null,titles:5,lastTitle:1951,lastOpponent:null,rivalryReveal:6,colorsReveal:6,teamReveal:9}
+};
+
 const CURATED=[
 {p:'Patrick Mahomes',pos:'QB',school:'Texas Tech'},{p:'Josh Allen',pos:'QB',school:'Wyoming'},{p:'Joe Burrow',pos:'QB',school:'LSU'},{p:'Jalen Hurts',pos:'QB',school:'Oklahoma'},{p:'Baker Mayfield',pos:'QB',school:'Oklahoma'},{p:'Lamar Jackson',pos:'QB',school:'Louisville'},{p:'Justin Herbert',pos:'QB',school:'Oregon'},{p:'Dak Prescott',pos:'QB',school:'Mississippi State'},{p:'Christian McCaffrey',pos:'RB',school:'Stanford'},{p:'Saquon Barkley',pos:'RB',school:'Penn State'},{p:'Derrick Henry',pos:'RB',school:'Alabama'},{p:'Josh Jacobs',pos:'RB',school:'Alabama'},{p:'Justin Jefferson',pos:'WR',school:'LSU'},{p:"Ja'Marr Chase",pos:'WR',school:'LSU'},{p:'CeeDee Lamb',pos:'WR',school:'Oklahoma'},{p:'A.J. Brown',pos:'WR',school:'Ole Miss'},{p:'Travis Kelce',pos:'TE',school:'Cincinnati'},{p:'George Kittle',pos:'TE',school:'Iowa'},{p:'Mark Andrews',pos:'TE',school:'Oklahoma'},{p:'T.J. Watt',pos:'DEF',school:'Wisconsin'},{p:'Myles Garrett',pos:'DEF',school:'Texas A&M'},{p:'Micah Parsons',pos:'DEF',school:'Penn State'},{p:'Jalen Ramsey',pos:'DEF',school:'Florida State'},{p:'Sauce Gardner',pos:'DEF',school:'Cincinnati'},{p:'Nick Bosa',pos:'DEF',school:'Ohio State'}];
 
 let Q=[];
-let s={players:['Player 1','Player 2'],scores:[0,0],turn:0,round:0,total:10,deck:[],clueCount:0,current:null,answered:false,single:false,selectedSchool:null};
+let s={player:'Player 1',score:0,round:0,total:10,deck:[],clueCount:0,current:null,answered:false,selectedSchool:null,timerSeconds:10,roundStartedAt:0,timerRAF:null,timeRemaining:10,lastRoundWeighted:0};
 const $=id=>document.getElementById(id);
 function norm(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').replace(/^the/,'')}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function canonicalSchool(raw){const n=norm(raw);for(const [school,m] of Object.entries(SCHOOL_META)){if(m.data.some(d=>norm(d)===n)||norm(school)===n)return school}return null}
 function buildAliases(school){const m=SCHOOL_META[school];return [school,...(m?.aliases||[])]}
-function makeClues(school,playerName,allPlayers){const m=SCHOOL_META[school];const alumni=allPlayers.filter(x=>x.school===school&&x.p!==playerName).sort((a,b)=>(b.rank||0)-(a.rank||0));const alumnus=alumni[0]?.p||'another notable NFL player';return [
-['NFL alumnus',`${alumnus} also played college football at this school.`],
-['Conference',`The school currently competes in the ${m.conf}.`],
-['Colors',`Its official/traditional athletics colors include ${m.colors}.`],
-['Rivalry',`It competes against ${m.rivalry}.`],
-['Team name',m.team]
-]}
+function safeMascotClue(extra,m){
+  if(!extra?.mascot)return null;
+  if(extra.mascotClue)return extra.mascotClue;
+  let v=extra.mascot;
+  const teamWords=String(m.team||'').split(/\s+/).filter(x=>x.length>3);
+  for(const w of teamWords)v=v.replace(new RegExp(`\\b${w}\\b`,'ig'),'').replace(/\s{2,}/g,' ').trim();
+  return v||null;
+}
+function clue(type,text,reveal){return {type,text,reveal}}
+function makeClues(school,playerName,allPlayers){
+  const m=SCHOOL_META[school],x=SCHOOL_EXTRA[school]||{};
+  const alumni=allPlayers.filter(p=>p.school===school&&p.p!==playerName).sort((a,b)=>(b.rank||0)-(a.rank||0));
+  const bank=[];
+  if(alumni[0]) bank.push(clue('NFL alumnus',`${alumni[0].p} also played college football at this school.`,4.2));
+  bank.push(clue('Conference',`The school currently competes in the ${m.conf}.`,5.2));
+  bank.push(clue('Official colors',`Its official/traditional athletics colors include ${m.colors}.`,x.colorsReveal||5.8));
+  bank.push(clue('Rivalry',`It competes against ${m.rivalry}.`,x.rivalryReveal||6.2));
+  if(Number.isFinite(x.titles)) bank.push(clue('National championships',x.titles===0?'This program has not claimed a major-college national championship.':`This program claims ${x.titles} major-college national championship${x.titles===1?'':'s'}.`,x.titles===0?3.2:Math.min(7.5,3.3+x.titles*.18)));
+  if(x.lastTitle) bank.push(clue('Most recent national title',`Its most recent claimed national championship came in ${x.lastTitle}.`,x.lastTitle>=2000?6.5:4.3));
+  if(x.lastTitle&&x.lastOpponent) bank.push(clue('Championship opponent',`In its most recent title season (${x.lastTitle}), its final championship-deciding opponent was ${x.lastOpponent}.`,x.lastTitle>=2000?7.6:5.8));
+  const mascot=safeMascotClue(x,m); if(mascot)bank.push(clue('Named mascot',mascot,Math.min(9.4,(x.teamReveal||8)-.7)));
+  bank.push(clue('Team nickname',m.team,x.teamReveal||8.8));
+  // Choose five while preserving variety, then sort hardest -> easiest by reveal strength.
+  // Tiny random jitter keeps repeat schools from always producing an identical clue sequence.
+  return shuffle(bank).sort((a,b)=>(a.reveal+Math.random()*.35)-(b.reveal+Math.random()*.35)).slice(0,5).sort((a,b)=>a.reveal-b.reveal);
+}
 function finalizePlayers(players){players.forEach(q=>{q.aliases=buildAliases(q.school);q.clues=makeClues(q.school,q.p,players)});return players}
 
 function parseSemicolonCSV(text){const lines=text.split(/\r?\n/).filter(Boolean);const head=lines.shift().split(';');const idx=Object.fromEntries(head.map((h,i)=>[h,i]));return lines.map(line=>{const c=line.split(';');return {year:+c[idx.year]||0,name:c[idx.name],college:c[idx.college],pos:c[idx.pos],simple:c[idx.simple_pos],drafted:c[idx.drafted],pro:+c[idx.pro_bowls]||0,allpro:+c[idx.all_pros_first_team]||0,starter:+c[idx.years_as_primary_starter]||0,av:+c[idx.career_av]||0,g:+c[idx.g]||0}})}
@@ -209,21 +278,76 @@ async function loadExpandedPool(){
   }
 }
 
-function toggleGameType(){const single=$('gameType').value==='single';$('p2wrap').classList.toggle('hidden',single)}
-function startGame(){if(Q.length<1)return;s.single=$('gameType').value==='single';s.players=[$('p1name').value.trim()||'Player 1',s.single?'':($('p2name').value.trim()||'Player 2')];s.scores=[0,0];s.turn=0;s.round=0;s.total=Math.min(+$('rounds').value,Q.length);s.deck=shuffle(Q).slice(0,s.total);$('setup').classList.add('hidden');if(s.single){$('game').classList.remove('hidden');beginTurn()}else{$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[0]}updateScores()}
-function beginTurn(){ $('handoff').classList.add('hidden');$('game').classList.remove('hidden');s.current=s.deck[s.round];s.clueCount=0;s.answered=false;s.selectedSchool=null;$('guess').value='';$('suggestions').classList.add('hidden');$('selectedSchool').textContent='Select a university from the list to submit.';$('clues').innerHTML='';$('feedback').textContent='';$('nflplayer').textContent=s.current.p;$('position').textContent=s.current.pos;$('roundpill').textContent=`Round ${s.round+1} / ${s.total}`;$('turnlabel').textContent=`${s.players[s.turn].toUpperCase()}'S TURN`;$('potential').textContent=SCORE[0];$('cluebtn').textContent='I NEED A CLUE — 8 PTS';$('guessbtn').disabled=false;$('cluebtn').disabled=false;updateScores();setTimeout(()=>$('guess').focus(),100)}
-function updateScores(){$('p1label').textContent=s.players[0];$('p1score').textContent=s.scores[0];$('p2label').textContent=s.single?'Solo High Score':s.players[1];$('p2score').textContent=s.single?'—':s.scores[1]}
-function revealClue(){if(s.clueCount>=5)return;const c=s.current.clues[s.clueCount];const div=document.createElement('div');div.className='clue';div.innerHTML=`<b>Clue ${s.clueCount+1} · ${c[0]}</b>${c[1]}`;$('clues').appendChild(div);s.clueCount++;$('potential').textContent=SCORE[s.clueCount];if(s.clueCount<5)$('cluebtn').textContent=`I NEED A CLUE — ${SCORE[s.clueCount+1]} PTS`;else{$('cluebtn').disabled=true;$('cluebtn').textContent='ALL CLUES REVEALED'}}
+function startGame(){
+  if(Q.length<1)return;
+  s.player=$('p1name').value.trim()||'Player 1';
+  s.score=0;s.round=0;s.total=Math.min(+$('rounds').value,Q.length);s.deck=shuffle(Q).slice(0,s.total);
+  s.timerSeconds=+$('timerSetting').value||10;
+  $('setup').classList.add('hidden');$('game').classList.remove('hidden');
+  beginTurn();updateScores();
+}
+function beginTurn(){
+  stopTimer();s.current=s.deck[s.round];s.clueCount=0;s.answered=false;s.selectedSchool=null;
+  $('guess').value='';$('suggestions').classList.add('hidden');$('selectedSchool').textContent='Select a university from the list to submit.';
+  $('clues').innerHTML='';$('feedback').textContent='';$('nflplayer').textContent=s.current.p;$('position').textContent=s.current.pos;
+  $('roundpill').textContent=`Round ${s.round+1} / ${s.total}`;$('turnlabel').textContent=s.player.toUpperCase();$('potential').textContent=SCORE[0];
+  $('cluebtn').textContent='I NEED A CLUE — 8 PTS';$('guessbtn').disabled=false;$('cluebtn').disabled=false;
+  updateScores();startTimer();setTimeout(()=>$('guess').focus(),100)
+}
+function startTimer(){
+  s.roundStartedAt=performance.now();s.timeRemaining=s.timerSeconds;updateTimerUI();
+  const tick=(now)=>{s.timeRemaining=Math.max(0,s.timerSeconds-(now-s.roundStartedAt)/1000);updateTimerUI();if(!s.answered&&s.timeRemaining>0)s.timerRAF=requestAnimationFrame(tick)};
+  s.timerRAF=requestAnimationFrame(tick)
+}
+function stopTimer(){if(s.timerRAF)cancelAnimationFrame(s.timerRAF);s.timerRAF=null}
+function updateTimerUI(){
+  const t=Math.max(0,s.timeRemaining);$('timer').textContent=t.toFixed(1);
+  $('weightedPotential').textContent=(SCORE[s.clueCount]*t).toFixed(1)
+}
+function updateScores(){$('p1label').textContent=s.player;$('p1score').textContent=s.score.toFixed(1)}
+function revealClue(){
+  if(s.clueCount>=5)return;const c=s.current.clues[s.clueCount];const div=document.createElement('div');div.className='clue';
+  div.innerHTML=`<b>Clue ${s.clueCount+1} · ${c.type}</b>${c.text}`;$('clues').appendChild(div);s.clueCount++;
+  $('potential').textContent=SCORE[s.clueCount];updateTimerUI();
+  if(s.clueCount<5)$('cluebtn').textContent=`I NEED A CLUE — ${SCORE[s.clueCount+1]} PTS`;else{$('cluebtn').disabled=true;$('cluebtn').textContent='ALL CLUES REVEALED'}
+}
+function submitGuess(){
+  if(!s.selectedSchool){$('feedback').innerHTML='<span class="bad"><b>Please select a university from the autocomplete list.</b></span>';return}
+  const v=s.selectedSchool;
+  if(isCorrect(v)){
+    s.answered=true;stopTimer();
+    const base=SCORE[s.clueCount], weighted=base*Math.max(0,s.timeRemaining);s.lastRoundWeighted=weighted;s.score+=weighted;
+    $('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · ${base} × ${Math.max(0,s.timeRemaining).toFixed(2)}s = <b>+${weighted.toFixed(1)}</b></span>`;
+    finishTurn()
+  }else{
+    $('feedback').innerHTML=`<span class="bad"><b>Not quite.</b></span> A new clue is required before another guess.`;$('guessbtn').disabled=true;
+    if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;s.selectedSchool=null;$('guess').value='';$('selectedSchool').textContent='Select a university from the list to submit.';$('guess').focus()},350)}else{finishTurn()}
+  }
+}
+function finishTurn(){
+  $('guessbtn').disabled=true;$('cluebtn').disabled=true;updateScores();
+  setTimeout(()=>{s.round++;if(s.round>=s.total){showEnd();return}beginTurn()},800)
+}
+function getHighScores(){try{return JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)||'[]')}catch{return []}}
+function saveHighScore(){
+  const scores=getHighScores();scores.push({name:s.player,score:+s.score.toFixed(1),rounds:s.total,timer:s.timerSeconds,date:new Date().toISOString()});
+  scores.sort((a,b)=>b.score-a.score);localStorage.setItem(HIGH_SCORE_KEY,JSON.stringify(scores.slice(0,10)));
+}
+function renderHighScores(){
+  const scores=getHighScores();if(!scores.length){$('highScores').innerHTML='<div class="tiny">No scores yet.</div>';return}
+  $('highScores').innerHTML='<table class="leaderboard"><thead><tr><th>#</th><th>Player</th><th>Game</th><th>Score</th></tr></thead><tbody>'+scores.map((x,i)=>`<tr class="${x.name===s.player&&Math.abs(x.score-s.score)<.05?'current':''}"><td>${i+1}</td><td>${x.name}</td><td>${x.rounds}R · ${x.timer}s</td><td><b>${Number(x.score).toFixed(1)}</b></td></tr>`).join('')+'</tbody></table>'
+}
+function showEnd(){
+  stopTimer();$('game').classList.add('hidden');$('end').classList.remove('hidden');saveHighScore();
+  $('winner').textContent=s.score.toFixed(1);$('endDetail').textContent=`${s.player} · ${s.total} rounds · ${s.timerSeconds}s timer`;renderHighScores()
+}
+function resetGame(){$('end').classList.add('hidden');$('setup').classList.remove('hidden')}
 function schoolList(){return Object.entries(SCHOOL_META).map(([name,m])=>({name,aliases:m.aliases||[]})).sort((a,b)=>a.name.localeCompare(b.name))}
 const SCHOOLS=schoolList();
 function showSuggestions(){s.selectedSchool=null;$('selectedSchool').textContent='Select a university from the list to submit.';const raw=$('guess').value.trim(),n=norm(raw),box=$('suggestions');if(!raw){box.classList.add('hidden');return}const hits=SCHOOLS.filter(x=>norm(x.name).includes(n)||x.aliases.some(a=>norm(a).includes(n))).slice(0,8);if(!hits.length){box.innerHTML='<div class="suggestion"><span>No matching university</span></div>';box.classList.remove('hidden');return}box.innerHTML=hits.map((x,i)=>`<div class="suggestion" onclick="selectSchoolByName('${x.name.replace(/'/g,"\\'")}')"><b>${x.name}</b><span>${x.aliases.slice(0,3).join(' · ')}</span></div>`).join('');box.classList.remove('hidden')}
 function selectSchoolByName(name){s.selectedSchool=name;$('guess').value=name;$('suggestions').classList.add('hidden');$('selectedSchool').textContent=`Selected: ${name}`}
 function isCorrect(v){return norm(v)===norm(s.current.school)}
-function submitGuess(){if(!s.selectedSchool){$('feedback').innerHTML='<span class="bad"><b>Please select a university from the autocomplete list.</b></span>';return}const v=s.selectedSchool;if(isCorrect(v)){const pts=SCORE[s.clueCount];s.scores[s.turn]+=pts;$('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · +${pts} points</span>`;finishTurn()}else{$('feedback').innerHTML=`<span class="bad"><b>Not quite.</b></span> A new clue is required before another guess.`;$('guessbtn').disabled=true;if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;s.selectedSchool=null;$('guess').value='';$('selectedSchool').textContent='Select a university from the list to submit.';$('guess').focus()},350)}else{finishTurn()}}}
-function finishTurn(){$('guessbtn').disabled=true;$('cluebtn').disabled=true;updateScores();setTimeout(()=>{s.round++;if(!s.single)s.turn=1-s.turn;if(s.round>=s.total){showEnd();return}$('game').classList.add('hidden');if(s.single){beginTurn()}else{$('handoff').classList.remove('hidden');$('handoffName').textContent=s.players[s.turn]}},800)}
-function showEnd(){$('game').classList.add('hidden');$('end').classList.remove('hidden');$('final1name').textContent=s.players[0];$('final1score').textContent=s.scores[0];$('final2name').textContent=s.single?'Questions':s.players[1];$('final2score').textContent=s.single?s.total:s.scores[1];$('winner').textContent=s.single?`Final score: ${s.scores[0]} / ${s.total*10}`:(s.scores[0]===s.scores[1]?'Tie game!':`${s.players[s.scores[0]>s.scores[1]?0:1]} wins!`)}
-function resetGame(){$('end').classList.add('hidden');$('setup').classList.remove('hidden')}
-$('guess').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('guessbtn').disabled)submitGuess()});document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete'))$('suggestions').classList.add('hidden')});toggleGameType();loadExpandedPool();
+$('guess').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('guessbtn').disabled)submitGuess()});document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete'))$('suggestions').classList.add('hidden')});loadExpandedPool();
 </script>
 </body>
 </html>
