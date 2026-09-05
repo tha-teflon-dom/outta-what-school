@@ -26,13 +26,11 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
   <section id="setup" class="card">
     <div class="row">
       <div><div class="label">Rounds</div><select id="rounds"><option>6</option><option selected>10</option><option>14</option></select></div>
-      <div><div class="label">Round Timer</div><select id="timerSetting"><option value="10" selected>10 seconds</option><option value="15">15 seconds</option><option value="20">20 seconds</option></select></div>
+      <div><div class="label">Difficulty</div><select id="mode"><option selected>Football Fan</option><option>Casual</option><option>Sicko</option></select></div>
     </div>
     <div class="spacer"></div>
     <div class="label">Player Name</div>
     <input id="p1name" value="Player 1" maxlength="18" />
-    <div class="spacer"></div>
-    <div><div class="label">Difficulty</div><select id="mode"><option selected>Football Fan</option><option>Casual</option><option>Sicko</option></select></div>
     <div class="spacer"></div>
     <button class="btn primary" id="startBtn" onclick="startGame()" disabled>START GAME</button>
     <div class="footer" id="poolStatus">Loading expanded 500-player pool + ranked clue engine…</div>
@@ -41,9 +39,9 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
   <section id="game" class="hidden">
     <div class="card">
       <div class="scoreline">
-        <div><div class="label" id="p1label">Player 1</div><div class="score" id="p1score">0.0</div></div>
-        <div class="center"><div class="pill" id="roundpill">Round 1 / 10</div><div class="tiny" style="margin-top:8px">Base points: <b id="potential">10</b></div></div>
-        <div style="text-align:right"><div class="label">Time Remaining</div><div class="timer" id="timer">10.0</div><div class="tiny">Weighted potential: <b id="weightedPotential">100.0</b></div></div>
+        <div><div class="label" id="p1label">Player 1</div><div class="score" id="p1score">0</div></div>
+        <div class="center"><div class="pill" id="roundpill">Round 1 / 10</div><div class="tiny" style="margin-top:8px">Points available: <b id="potential">10</b></div></div>
+        <div style="text-align:right"><div class="label">Difficulty</div><div class="tag" id="difficultyBadge">Football Fan</div></div>
       </div>
     </div>
 
@@ -60,18 +58,16 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
         <input id="guess" placeholder="Start typing a school (e.g. Bama, PSU, Cincy)" autocomplete="off" oninput="showSuggestions()" />
         <div id="suggestions" class="suggestions hidden"></div>
       </div>
-      <div id="selectedSchool" class="selected-school">Select a university from the list to submit.</div>
+      <div id="selectedSchool" class="selected-school">Select a university from the list — your selection submits immediately.</div>
       <div class="spacer"></div>
-      <div class="row">
-        <button class="btn primary" id="guessbtn" onclick="submitGuess()">SUBMIT GUESS</button>
-        <button class="btn secondary" id="cluebtn" onclick="revealClue()">I NEED A CLUE — 8 PTS</button>
-      </div>
+      <button class="btn primary hidden" id="guessbtn" onclick="submitGuess()">SUBMIT GUESS</button>
+      <button class="btn secondary" id="cluebtn" style="width:100%" onclick="revealClue()">I NEED A CLUE — 8 PTS</button>
       <div id="feedback" class="tiny" style="margin-top:12px"></div>
     </div>
   </section>
 
   <section id="end" class="card hidden center">
-    <div class="label">Final Weighted Score</div>
+    <div class="label">Final Score</div>
     <div class="big" id="winner">0.0</div>
     <div class="tiny" id="endDetail" style="margin-top:8px"></div>
     <div class="divider"></div>
@@ -82,7 +78,7 @@ input,select{width:100%;border:1px solid var(--line);border-radius:14px;backgrou
 </div>
 <script>
 const SCORE=[10,8,6,4,2,1];
-const HIGH_SCORE_KEY='outtaWhatSchool.highScores.v1';
+const HIGH_SCORE_KEY='outtaWhatSchool.highScores.v2';
 const TARGET_POOL=500;
 const DATA_URL='https://raw.githubusercontent.com/phcs971/nfl-draft-dataset/main/nfl_data.csv';
 
@@ -208,10 +204,10 @@ const SCHOOL_EXTRA={
 };
 
 const CURATED=[
-{p:'Patrick Mahomes',pos:'QB',school:'Texas Tech'},{p:'Josh Allen',pos:'QB',school:'Wyoming'},{p:'Joe Burrow',pos:'QB',school:'LSU'},{p:'Jalen Hurts',pos:'QB',school:'Oklahoma'},{p:'Baker Mayfield',pos:'QB',school:'Oklahoma'},{p:'Lamar Jackson',pos:'QB',school:'Louisville'},{p:'Justin Herbert',pos:'QB',school:'Oregon'},{p:'Dak Prescott',pos:'QB',school:'Mississippi State'},{p:'Christian McCaffrey',pos:'RB',school:'Stanford'},{p:'Saquon Barkley',pos:'RB',school:'Penn State'},{p:'Derrick Henry',pos:'RB',school:'Alabama'},{p:'Josh Jacobs',pos:'RB',school:'Alabama'},{p:'Justin Jefferson',pos:'WR',school:'LSU'},{p:"Ja'Marr Chase",pos:'WR',school:'LSU'},{p:'CeeDee Lamb',pos:'WR',school:'Oklahoma'},{p:'A.J. Brown',pos:'WR',school:'Ole Miss'},{p:'Travis Kelce',pos:'TE',school:'Cincinnati'},{p:'George Kittle',pos:'TE',school:'Iowa'},{p:'Mark Andrews',pos:'TE',school:'Oklahoma'},{p:'T.J. Watt',pos:'DEF',school:'Wisconsin'},{p:'Myles Garrett',pos:'DEF',school:'Texas A&M'},{p:'Micah Parsons',pos:'DEF',school:'Penn State'},{p:'Jalen Ramsey',pos:'DEF',school:'Florida State'},{p:'Sauce Gardner',pos:'DEF',school:'Cincinnati'},{p:'Nick Bosa',pos:'DEF',school:'Ohio State'}];
+{p:'Patrick Mahomes',pos:'QB',school:'Texas Tech'},{p:'Josh Allen',pos:'QB',school:'Wyoming'},{p:'Joe Burrow',pos:'QB',school:'LSU'},{p:'Jalen Hurts',pos:'QB',school:'Oklahoma'},{p:'Baker Mayfield',pos:'QB',school:'Oklahoma'},{p:'Lamar Jackson',pos:'QB',school:'Louisville'},{p:'Justin Herbert',pos:'QB',school:'Oregon'},{p:'Dak Prescott',pos:'QB',school:'Mississippi State'},{p:'Christian McCaffrey',pos:'RB',school:'Stanford'},{p:'Saquon Barkley',pos:'RB',school:'Penn State'},{p:'Derrick Henry',pos:'RB',school:'Alabama'},{p:'Josh Jacobs',pos:'RB',school:'Alabama'},{p:'Justin Jefferson',pos:'WR',school:'LSU'},{p:"Ja'Marr Chase",pos:'WR',school:'LSU'},{p:'CeeDee Lamb',pos:'WR',school:'Oklahoma'},{p:'A.J. Brown',pos:'WR',school:'Ole Miss'},{p:'Travis Kelce',pos:'TE',school:'Cincinnati'},{p:'George Kittle',pos:'TE',school:'Iowa'},{p:'Mark Andrews',pos:'TE',school:'Oklahoma'},{p:'T.J. Watt',pos:'DEF',school:'Wisconsin',pro:7},{p:'Myles Garrett',pos:'DEF',school:'Texas A&M',pro:6},{p:'Micah Parsons',pos:'DEF',school:'Penn State',pro:4},{p:'Jalen Ramsey',pos:'DEF',school:'Florida State',pro:7},{p:'Sauce Gardner',pos:'DEF',school:'Cincinnati',pro:2},{p:'Nick Bosa',pos:'DEF',school:'Ohio State',pro:4}];
 
 let Q=[];
-let s={player:'Player 1',score:0,round:0,total:10,deck:[],clueCount:0,current:null,answered:false,selectedSchool:null,timerSeconds:10,roundStartedAt:0,timerRAF:null,timeRemaining:10,lastRoundWeighted:0};
+let s={player:'Player 1',score:0,round:0,total:10,deck:[],clueCount:0,current:null,answered:false,selectedSchool:null,mode:'Football Fan',guessLocked:false};
 const $=id=>document.getElementById(id);
 function norm(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').replace(/^the/,'')}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
@@ -267,9 +263,9 @@ async function loadExpandedPool(){
     // Guarantee curated stars/transfers are present and prefer their hand-checked school mapping.
     const byName=new Map(candidates.map(x=>[norm(x.p),x]));
     CURATED.forEach(c=>byName.set(norm(c.p),{...byName.get(norm(c.p)),...c,rank:(byName.get(norm(c.p))?.rank||999)+500}));
-    candidates=[...byName.values()].filter(x=>SCHOOL_META[x.school]).sort((a,b)=>(b.rank||0)-(a.rank||0)).slice(0,TARGET_POOL);
+    candidates=[...byName.values()].filter(x=>SCHOOL_META[x.school]).sort((a,b)=>(b.rank||0)-(a.rank||0)).slice(0,900);
     Q=finalizePlayers(candidates);
-    status.innerHTML=`Expanded pool loaded: <b>${Q.length}</b> eligible players · offense + defensive Pro Bowlers · 2009–2024 draft classes.`;
+    status.innerHTML=`Expanded player database loaded: <b>${Q.length}</b> candidates · difficulty now controls defensive Pro Bowl eligibility.`;
     btn.disabled=Q.length<10;
   }catch(e){
     Q=finalizePlayers(CURATED.map(x=>({...x,rank:999})));
@@ -278,50 +274,50 @@ async function loadExpandedPool(){
   }
 }
 
+function eligibleForMode(q,mode){
+  if(q.pos!=='DEF') return true;
+  const pb=Number(q.pro||0);
+  if(mode==='Casual') return pb>=4;
+  if(mode==='Football Fan') return pb>=2;
+  return pb>=1;
+}
+function modePool(){return Q.filter(q=>eligibleForMode(q,s.mode))}
 function startGame(){
   if(Q.length<1)return;
   s.player=$('p1name').value.trim()||'Player 1';
-  s.score=0;s.round=0;s.total=Math.min(+$('rounds').value,Q.length);s.deck=shuffle(Q).slice(0,s.total);
-  s.timerSeconds=+$('timerSetting').value||10;
+  s.mode=$('mode').value||'Football Fan';
+  const pool=modePool();
+  s.score=0;s.round=0;s.total=Math.min(+$('rounds').value,pool.length);s.deck=shuffle(pool).slice(0,s.total);
   $('setup').classList.add('hidden');$('game').classList.remove('hidden');
   beginTurn();updateScores();
 }
 function beginTurn(){
-  stopTimer();s.current=s.deck[s.round];s.clueCount=0;s.answered=false;s.selectedSchool=null;
-  $('guess').value='';$('suggestions').classList.add('hidden');$('selectedSchool').textContent='Select a university from the list to submit.';
+  s.current=s.deck[s.round];s.clueCount=0;s.answered=false;s.selectedSchool=null;s.guessLocked=false;
+  $('guess').value='';$('suggestions').classList.add('hidden');$('selectedSchool').textContent='Select a university from the list — your selection submits immediately.';
   $('clues').innerHTML='';$('feedback').textContent='';$('nflplayer').textContent=s.current.p;$('position').textContent=s.current.pos;
-  $('roundpill').textContent=`Round ${s.round+1} / ${s.total}`;$('turnlabel').textContent=s.player.toUpperCase();$('potential').textContent=SCORE[0];
+  $('roundpill').textContent=`Round ${s.round+1} / ${s.total}`;$('turnlabel').textContent=s.player.toUpperCase();$('potential').textContent=SCORE[0];$('difficultyBadge').textContent=s.mode;
   $('cluebtn').textContent='I NEED A CLUE — 8 PTS';$('guessbtn').disabled=false;$('cluebtn').disabled=false;
-  updateScores();startTimer();setTimeout(()=>$('guess').focus(),100)
+  updateScores();setTimeout(()=>$('guess').focus(),100)
 }
-function startTimer(){
-  s.roundStartedAt=performance.now();s.timeRemaining=s.timerSeconds;updateTimerUI();
-  const tick=(now)=>{s.timeRemaining=Math.max(0,s.timerSeconds-(now-s.roundStartedAt)/1000);updateTimerUI();if(!s.answered&&s.timeRemaining>0)s.timerRAF=requestAnimationFrame(tick)};
-  s.timerRAF=requestAnimationFrame(tick)
-}
-function stopTimer(){if(s.timerRAF)cancelAnimationFrame(s.timerRAF);s.timerRAF=null}
-function updateTimerUI(){
-  const t=Math.max(0,s.timeRemaining);$('timer').textContent=t.toFixed(1);
-  $('weightedPotential').textContent=(SCORE[s.clueCount]*t).toFixed(1)
-}
-function updateScores(){$('p1label').textContent=s.player;$('p1score').textContent=s.score.toFixed(1)}
+function updateScores(){$('p1label').textContent=s.player;$('p1score').textContent=String(s.score)}
 function revealClue(){
   if(s.clueCount>=5)return;const c=s.current.clues[s.clueCount];const div=document.createElement('div');div.className='clue';
   div.innerHTML=`<b>Clue ${s.clueCount+1} · ${c.type}</b>${c.text}`;$('clues').appendChild(div);s.clueCount++;
-  $('potential').textContent=SCORE[s.clueCount];updateTimerUI();
+  $('potential').textContent=SCORE[s.clueCount];
   if(s.clueCount<5)$('cluebtn').textContent=`I NEED A CLUE — ${SCORE[s.clueCount+1]} PTS`;else{$('cluebtn').disabled=true;$('cluebtn').textContent='ALL CLUES REVEALED'}
 }
 function submitGuess(){
-  if(!s.selectedSchool){$('feedback').innerHTML='<span class="bad"><b>Please select a university from the autocomplete list.</b></span>';return}
+  if(!s.selectedSchool||s.guessLocked)return;
+  s.guessLocked=true;
   const v=s.selectedSchool;
   if(isCorrect(v)){
-    s.answered=true;stopTimer();
-    const base=SCORE[s.clueCount], weighted=base*Math.max(0,s.timeRemaining);s.lastRoundWeighted=weighted;s.score+=weighted;
-    $('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · ${base} × ${Math.max(0,s.timeRemaining).toFixed(2)}s = <b>+${weighted.toFixed(1)}</b></span>`;
+    s.answered=true;
+    const base=SCORE[s.clueCount];s.score+=base;
+    $('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · <b>+${base}</b></span>`;
     finishTurn()
   }else{
     $('feedback').innerHTML=`<span class="bad"><b>Not quite.</b></span> A new clue is required before another guess.`;$('guessbtn').disabled=true;
-    if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;s.selectedSchool=null;$('guess').value='';$('selectedSchool').textContent='Select a university from the list to submit.';$('guess').focus()},350)}else{finishTurn()}
+    if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;s.guessLocked=false;s.selectedSchool=null;$('guess').value='';$('selectedSchool').textContent='Select a university from the list — your selection submits immediately.';$('guess').focus()},350)}else{finishTurn()}
   }
 }
 function finishTurn(){
@@ -330,24 +326,24 @@ function finishTurn(){
 }
 function getHighScores(){try{return JSON.parse(localStorage.getItem(HIGH_SCORE_KEY)||'[]')}catch{return []}}
 function saveHighScore(){
-  const scores=getHighScores();scores.push({name:s.player,score:+s.score.toFixed(1),rounds:s.total,timer:s.timerSeconds,date:new Date().toISOString()});
+  const scores=getHighScores();scores.push({name:s.player,score:s.score,rounds:s.total,mode:s.mode,date:new Date().toISOString()});
   scores.sort((a,b)=>b.score-a.score);localStorage.setItem(HIGH_SCORE_KEY,JSON.stringify(scores.slice(0,10)));
 }
 function renderHighScores(){
   const scores=getHighScores();if(!scores.length){$('highScores').innerHTML='<div class="tiny">No scores yet.</div>';return}
-  $('highScores').innerHTML='<table class="leaderboard"><thead><tr><th>#</th><th>Player</th><th>Game</th><th>Score</th></tr></thead><tbody>'+scores.map((x,i)=>`<tr class="${x.name===s.player&&Math.abs(x.score-s.score)<.05?'current':''}"><td>${i+1}</td><td>${x.name}</td><td>${x.rounds}R · ${x.timer}s</td><td><b>${Number(x.score).toFixed(1)}</b></td></tr>`).join('')+'</tbody></table>'
+  $('highScores').innerHTML='<table class="leaderboard"><thead><tr><th>#</th><th>Player</th><th>Game</th><th>Score</th></tr></thead><tbody>'+scores.map((x,i)=>`<tr class="${x.name===s.player&&x.score===s.score?'current':''}"><td>${i+1}</td><td>${x.name}</td><td>${x.rounds}R · ${x.mode||'Legacy'}</td><td><b>${Number(x.score)}</b></td></tr>`).join('')+'</tbody></table>'
 }
 function showEnd(){
-  stopTimer();$('game').classList.add('hidden');$('end').classList.remove('hidden');saveHighScore();
-  $('winner').textContent=s.score.toFixed(1);$('endDetail').textContent=`${s.player} · ${s.total} rounds · ${s.timerSeconds}s timer`;renderHighScores()
+  $('game').classList.add('hidden');$('end').classList.remove('hidden');saveHighScore();
+  $('winner').textContent=String(s.score);$('endDetail').textContent=`${s.player} · ${s.total} rounds · ${s.mode}`;renderHighScores()
 }
 function resetGame(){$('end').classList.add('hidden');$('setup').classList.remove('hidden')}
 function schoolList(){return Object.entries(SCHOOL_META).map(([name,m])=>({name,aliases:m.aliases||[]})).sort((a,b)=>a.name.localeCompare(b.name))}
 const SCHOOLS=schoolList();
-function showSuggestions(){s.selectedSchool=null;$('selectedSchool').textContent='Select a university from the list to submit.';const raw=$('guess').value.trim(),n=norm(raw),box=$('suggestions');if(!raw){box.classList.add('hidden');return}const hits=SCHOOLS.filter(x=>norm(x.name).includes(n)||x.aliases.some(a=>norm(a).includes(n))).slice(0,8);if(!hits.length){box.innerHTML='<div class="suggestion"><span>No matching university</span></div>';box.classList.remove('hidden');return}box.innerHTML=hits.map((x,i)=>`<div class="suggestion" onclick="selectSchoolByName('${x.name.replace(/'/g,"\\'")}')"><b>${x.name}</b><span>${x.aliases.slice(0,3).join(' · ')}</span></div>`).join('');box.classList.remove('hidden')}
-function selectSchoolByName(name){s.selectedSchool=name;$('guess').value=name;$('suggestions').classList.add('hidden');$('selectedSchool').textContent=`Selected: ${name}`}
+function showSuggestions(){s.selectedSchool=null;$('selectedSchool').textContent='Select a university from the list — your selection submits immediately.';const raw=$('guess').value.trim(),n=norm(raw),box=$('suggestions');if(!raw){box.classList.add('hidden');return}const hits=SCHOOLS.filter(x=>norm(x.name).includes(n)||x.aliases.some(a=>norm(a).includes(n))).slice(0,8);if(!hits.length){box.innerHTML='<div class="suggestion"><span>No matching university</span></div>';box.classList.remove('hidden');return}box.innerHTML=hits.map((x,i)=>`<div class="suggestion" onclick="selectSchoolByName('${x.name.replace(/'/g,"\\'")}')"><b>${x.name}</b><span>${x.aliases.slice(0,3).join(' · ')}</span></div>`).join('');box.classList.remove('hidden')}
+function selectSchoolByName(name){if(s.answered||s.guessLocked)return;s.selectedSchool=name;$('guess').value=name;$('suggestions').classList.add('hidden');$('selectedSchool').textContent=`Submitting: ${name}`;setTimeout(submitGuess,60)}
 function isCorrect(v){return norm(v)===norm(s.current.school)}
-$('guess').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('guessbtn').disabled)submitGuess()});document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete'))$('suggestions').classList.add('hidden')});loadExpandedPool();
+$('guess').addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault()});document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete'))$('suggestions').classList.add('hidden')});loadExpandedPool();
 </script>
 </body>
 </html>
