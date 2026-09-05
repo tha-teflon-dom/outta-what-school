@@ -230,9 +230,19 @@ function makeClues(school,playerName,allPlayers){
   bank.push(clue('Conference',`The school currently competes in the ${m.conf}.`,5.2));
   bank.push(clue('Official colors',`Its official/traditional athletics colors include ${m.colors}.`,x.colorsReveal||5.8));
   bank.push(clue('Rivalry',`It competes against ${m.rivalry}.`,x.rivalryReveal||6.2));
-  if(Number.isFinite(x.titles)) bank.push(clue('National championships',x.titles===0?'This program has not claimed a major-college national championship.':`This program claims ${x.titles} major-college national championship${x.titles===1?'':'s'}.`,x.titles===0?3.2:Math.min(7.5,3.3+x.titles*.18)));
-  if(x.lastTitle) bank.push(clue('Most recent national title',`Its most recent claimed national championship came in ${x.lastTitle}.`,x.lastTitle>=2000?6.5:4.3));
-  if(x.lastTitle&&x.lastOpponent) bank.push(clue('Championship opponent',`In its most recent title season (${x.lastTitle}), its final championship-deciding opponent was ${x.lastOpponent}.`,x.lastTitle>=2000?7.6:5.8));
+  // Championship history is consolidated into one occasional clue.
+  if(Number.isFinite(x.titles) && Math.random() < 0.22){
+    let championshipText;
+    if(x.titles===0){
+      championshipText='This program has not claimed a major-college national championship.';
+    }else{
+      championshipText=`${x.titles} claimed major-college national championship${x.titles===1?'':'s'}`;
+      if(x.lastTitle) championshipText+=` · Most recent: ${x.lastTitle}`;
+      if(x.lastOpponent) championshipText+=` · Title-deciding opponent: ${x.lastOpponent}`;
+      championshipText+='.';
+    }
+    bank.push(clue('National championships',championshipText,x.lastOpponent?6.1:(x.lastTitle?5.3:4.2)));
+  }
   const mascot=safeMascotClue(x,m); if(mascot)bank.push(clue('Named mascot',mascot,Math.min(9.4,(x.teamReveal||8)-.7)));
   bank.push(clue('Team nickname',m.team,x.teamReveal||8.8));
   // Choose five while preserving variety, then sort hardest -> easiest by reveal strength.
@@ -265,7 +275,7 @@ async function loadExpandedPool(){
     CURATED.forEach(c=>byName.set(norm(c.p),{...byName.get(norm(c.p)),...c,rank:(byName.get(norm(c.p))?.rank||999)+500}));
     candidates=[...byName.values()].filter(x=>SCHOOL_META[x.school]).sort((a,b)=>(b.rank||0)-(a.rank||0)).slice(0,900);
     Q=finalizePlayers(candidates);
-    status.innerHTML=`Expanded player database loaded: <b>${Q.length}</b> candidates · difficulty now controls defensive Pro Bowl eligibility.`;
+    status.innerHTML=`Expanded player database loaded: <b>${Q.length}</b> candidates · difficulty controls player recognizability and defensive Pro Bowl eligibility.`;
     btn.disabled=Q.length<10;
   }catch(e){
     Q=finalizePlayers(CURATED.map(x=>({...x,rank:999})));
@@ -275,13 +285,22 @@ async function loadExpandedPool(){
 }
 
 function eligibleForMode(q,mode){
-  if(q.pos!=='DEF') return true;
-  const pb=Number(q.pro||0);
-  if(mode==='Casual') return pb>=4;
-  if(mode==='Football Fan') return pb>=2;
-  return pb>=1;
+  const pb=Number(q.pro||0), rank=Number(q.rank||0);
+  if(q.pos==='DEF'){
+    if(mode==='Casual') return pb>=4;
+    if(mode==='Football Fan') return pb>=2;
+    return pb>=1;
+  }
+  if(mode==='Casual') return rank>=185;
+  if(mode==='Football Fan') return rank>=65;
+  return true;
 }
-function modePool(){return Q.filter(q=>eligibleForMode(q,s.mode))}
+function modePool(){
+  const pool=Q.filter(q=>eligibleForMode(q,s.mode)).sort((a,b)=>(b.rank||0)-(a.rank||0));
+  if(s.mode==='Casual') return pool.slice(0,180);
+  if(s.mode==='Football Fan') return pool.slice(0,360);
+  return pool;
+}
 function startGame(){
   if(Q.length<1)return;
   s.player=$('p1name').value.trim()||'Player 1';
