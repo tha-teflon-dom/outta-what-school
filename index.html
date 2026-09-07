@@ -565,10 +565,11 @@ function submitGuess(){
     s.answered=true;
     const base=SCORE[s.clueCount];s.score+=base;
     $('feedback').innerHTML=`<span class="good"><b>Correct!</b> ${s.current.school} · <b>+${base}</b></span>`;
-    finishTurn()
+    setTimeout(()=>finishTurn(),700);
   }else{
-    $('feedback').innerHTML=`<span class="bad"><b>Not quite.</b></span> A new clue is required before another guess.`;$('guessbtn').disabled=true;
-    if(s.clueCount<5){revealClue();setTimeout(()=>{$('guessbtn').disabled=false;s.guessLocked=false;s.selectedSchool=null;$('guess').value='';$('selectedSchool').textContent='Select a university from the list — your selection submits immediately.';$('guess').focus()},350)}else{finishTurn()}
+    s.answered=true;
+    $('feedback').innerHTML=`<span class="bad"><b>Incorrect.</b></span> Correct answer: <b>${s.current.school}</b> · <b>0 points</b>`;
+    setTimeout(()=>finishTurn(),950);
   }
 }
 function finishTurn(){
